@@ -13,6 +13,7 @@ import Login from "./page/Login";
 import Home from "./page/Home";
 import Friends from "./page/Friends";
 import SavedPosts from "./page/SavedPosts";
+import Notifications from "./page/Notifications";
 
 function App() {
   const [auth, setAuth] = useState(true);
@@ -25,17 +26,17 @@ function App() {
         <Login />
       ) : (
         <Box sx={{ display: "flex", gap: "1rem" }}>
-          <Box sx={{ flexGrow: 1 }}>
+          <Box sx={{ width: "25%" }}>
             {location !== "/login" && <Navigation />}
           </Box>
 
           {/* Routing */}
-          <Box sx={{ flexGrow: 10 }}>
+          <Box sx={{ width: "75%" }}>
             <Routes>
               <Route index={true} path="/home" element={<Home />} />
               <Route path="/friends" element={<Friends />} />
               <Route path="/savedPosts" element={<SavedPosts />} />
-              <Route path="/notifications" element={<div>notification</div>} />
+              <Route path="/notifications" element={<Notifications />} />
               <Route path="/logout" element={<div>Logout</div>} />
             </Routes>
             {/* <RouterProvider router={router} /> */}
