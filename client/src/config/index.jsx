@@ -3,7 +3,6 @@ import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import LogoutIcon from "@mui/icons-material/Logout";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
-
 import GoogleIcon from "@mui/icons-material/Google";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import GitHubIcon from "@mui/icons-material/GitHub";
@@ -67,4 +66,11 @@ export const config = {
       icon: <ShareIcon sx={{ fontSize: "2.5rem" }} />,
     },
   ],
+  urls: {
+    auth: {
+      logIn: () => {
+        return `${import.meta.env.VITE_BACKEND_URL}/auth/login`;
+      },
+    },
+  },
 };

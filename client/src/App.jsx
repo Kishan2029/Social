@@ -16,7 +16,7 @@ import SavedPosts from "./page/SavedPosts";
 import Notifications from "./page/Notifications";
 
 function App() {
-  const [auth, setAuth] = useState(true);
+  const [auth, setAuth] = useState(null);
   const location = useLocation();
 
   // console.log("location", location);

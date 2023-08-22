@@ -4,7 +4,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 const cors = require("cors");
 const route = require("./routes/routes");
-const { errorHandler, logger } = require('./middleware/index');
+const { errorHandler, logger, checkAuth } = require('./middleware/index');
 
 const connectDB = require('./config/db');
 
@@ -30,6 +30,8 @@ app.get('/', (req, res) => {
 })
 
 app.use(logger);
+
+app.use(checkAuth);
 
 route(app);
 
