@@ -11,7 +11,11 @@ import {
 } from "firebase/auth";
 import { auth } from "../firebaseConfig";
 
+import { useSelector, useDispatch } from "react-redux";
+import { setUser } from "../store/slices/authSlice";
+
 const Login = () => {
+  const dispatch = useDispatch();
   // useEffect(() => {
   //   onAuthStateChanged(auth, (user) => {
   //     if (user) {
@@ -30,6 +34,7 @@ const Login = () => {
       },
     });
     console.log("res", res.data);
+    dispatch(setUser(body));
   };
 
   const handleLogin = () => {

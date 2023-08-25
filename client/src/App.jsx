@@ -14,9 +14,12 @@ import Home from "./page/Home";
 import Friends from "./page/Friends";
 import SavedPosts from "./page/SavedPosts";
 import Notifications from "./page/Notifications";
+import { useSelector, useDispatch } from "react-redux";
 
 function App() {
-  const [auth, setAuth] = useState(null);
+  const auth = useSelector((state) => state.auth.user);
+  console.log("auth", auth);
+  // const [auth, setAuth] = useState(null);
   const location = useLocation();
 
   // console.log("location", location);
