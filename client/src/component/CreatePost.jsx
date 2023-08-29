@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   Card,
+  IconButton,
   TextField,
   TextareaAutosize,
   makeStyles,
@@ -13,6 +14,7 @@ import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
+import CancelIcon from "@mui/icons-material/Cancel";
 import { config } from "../config";
 import { useSelector } from "react-redux";
 import axios from "axios";
@@ -101,21 +103,43 @@ const CreatePost = () => {
       </Box>
 
       {/* selected Image */}
+      <Box
+        sx={{
+          display: "flex",
+          mt: "1rem",
+          rowGap: 4,
+          columnGap: 4,
+          flexWrap: "wrap",
+        }}
+      >
+        {image &&
+          image.map((item) => {
+            return (
+              <Box sx={{ display: "flex" }} key={item.name}>
+                <img
+                  style={{ borderRadius: "1rem" }}
+                  alt="not found"
+                  width={"160px"}
+                  // height={"80px"}
+                  src={URL.createObjectURL(item)}
+                />
+                <br />
 
-      {/* {image &&
-        image.map((item) => {
-          return (
-            <div>
-              <img
-                alt="not found"
-                width={"50px"}
-                src={URL.createObjectURL(item)}
-              />
-              <br />
-              <button onClick={() => setImage(null)}>Remove</button>
-            </div>
-          );
-        })} */}
+                <CancelIcon
+                  sx={{ alignSelf: "start" }}
+                  onClick={() => {
+                    console.log("item", item.name);
+                    setImage((prevState) => {
+                      return prevState.filter(
+                        (image) => image.name !== item.name
+                      );
+                    });
+                  }}
+                />
+              </Box>
+            );
+          })}
+      </Box>
       <Box
         sx={{
           display: "flex",
@@ -135,7 +159,16 @@ const CreatePost = () => {
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 0.4 }}>
+            <label
+              htmlFor="image-upload"
+              style={{ display: "flex", alignItems: "center" }}
+            >
+              <AddPhotoAlternateIcon sx={{ fontSize: "1.7rem" }} />
+              <span>Photos</span>
+            </label>
             <input
+              id="image-upload"
+              style={{ display: "none" }}
               type="file"
               name="myImage"
               accept="image/*"
@@ -147,9 +180,6 @@ const CreatePost = () => {
                 setImage(Object.values(event.target.files));
               }}
             />
-
-            {/* <AddPhotoAlternateIcon sx={{ fontSize: "1.7rem" }} />
-            Photos */}
           </Box>
           <Box sx={{ display: "flex", alignItems: "center", gap: 0.4 }}>
             <PersonOutlineIcon sx={{ fontSize: "1.7rem" }} />

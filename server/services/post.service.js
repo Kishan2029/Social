@@ -16,7 +16,6 @@ exports.createPost = async function (body, file) {
                 contentType: item.mimetype
             }
         })
-        // console.log("images", images)
         const post = {
             content,
             createdBy: user,
@@ -26,6 +25,22 @@ exports.createPost = async function (body, file) {
         const newPost = new Post(post)
         await newPost.save();
         return "New post is created";
+    } catch (e) {
+        // Log Errors
+        console.log("error", e)
+    }
+}
+
+exports.getPosts = async function (email) {
+
+
+    try {
+        const userId = await User.findOne({ email: email });
+        // console.log("userId",user)
+        const posts = await Post.find({ createdBy: userId._id })
+        console.log("posts", posts);
+        return posts;
+
     } catch (e) {
         // Log Errors
         console.log("error", e)

@@ -7,7 +7,7 @@ const Home = () => {
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
       <CreatePost />
-      <Post />
+      <Post name="" time="" content="" imegData=" " />
     </Box>
   );
 };
