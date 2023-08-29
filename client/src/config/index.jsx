@@ -72,5 +72,10 @@ export const config = {
         return `${import.meta.env.VITE_BACKEND_URL}/auth/login`;
       },
     },
+    post: {
+      createPost: () => {
+        return `${import.meta.env.VITE_BACKEND_URL}/post/createPost`;
+      },
+    },
   },
 };

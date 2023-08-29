@@ -1,12 +1,29 @@
 import { Box, Card, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { config } from "../config";
-import { AccessAlarm, ThreeDRotation } from "@mui/icons-material";
 import { redirect, useLocation, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setUser } from "../store/slices/authSlice";
+import { removeAccessToken } from "../util";
+import { signOut } from "firebase/auth";
+import { auth } from "../firebaseConfig";
+// import { auth } from "../firebaseConfig";
 
 const Navigation = () => {
-  const [page, setPage] = useState("home"); // home,friends, savedPosts, notification,login
+  const [selected, setSelected] = useState("home"); // home,friends, savedPosts, notification,login
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const logout = () => {
+    signOut(auth)
+      .then(() => {
+        removeAccessToken();
+        dispatch(setUser(null));
+      })
+      .catch((error) => {
+        console.log("Sign out firebase error", error);
+      });
+  };
 
   const onHover = {
     backgroundColor: "rgb(33, 141, 250, 0.2)",
@@ -35,20 +52,23 @@ const Navigation = () => {
                 gap: "0.6rem",
                 padding: "0.6rem 1rem",
                 width: "100%",
-                backgroundColor: page === item.name && "#218DFA",
-                color: page === item.name && "white",
-                // fontSize: page === item.name && "1.2rem",
+                backgroundColor: selected === item.name && "#218DFA",
+                color: selected === item.name && "white",
+                // fontSize: selected === item.name && "1.2rem",
                 borderRadius: "0.5rem",
 
                 zIndex: 1000,
-                "&:hover": page !== item.name && onHover,
+                "&:hover": selected !== item.name && onHover,
               }}
               key={item.title}
               onClick={() => {
-                setPage(item.name);
                 console.log("clicked", item.name);
-                navigate(`/${item.name}`);
-                // return redirect(`/${item.name}`);
+                if (item.name === "logout") {
+                  logout();
+                } else {
+                  setSelected(item.name);
+                  navigate(`/${item.name}`);
+                }
               }}
             >
               {item.icon}

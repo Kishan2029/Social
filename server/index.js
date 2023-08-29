@@ -3,6 +3,8 @@ const app = express();
 const dotenv = require("dotenv");
 dotenv.config();
 const cors = require("cors");
+const bodyParser = require('body-parser');
+const path = require("path");
 const route = require("./routes/routes");
 const { errorHandler, logger, checkAuth } = require('./middleware/index');
 
@@ -20,10 +22,17 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
+app.use(express.static(path.join(__dirname, 'uploads')));
+// app.use(bodyParser({ uploadDir: path.join(__dirname, 'files'), keepExtensions: true }));
+
 const PORT = process.env.PORT || 8000;
 
 
 connectDB();
+
+
 
 app.get('/', (req, res) => {
     res.send('Server is working')
@@ -31,7 +40,7 @@ app.get('/', (req, res) => {
 
 app.use(logger);
 
-app.use(checkAuth);
+// app.use(checkAuth);
 
 route(app);
 

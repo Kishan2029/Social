@@ -13,57 +13,47 @@ import { auth } from "../firebaseConfig";
 
 import { useSelector, useDispatch } from "react-redux";
 import { setUser } from "../store/slices/authSlice";
+import { getAccessToken } from "../util";
+import { setLoader } from "../store/slices/loaderSlice";
 
 const Login = () => {
   const dispatch = useDispatch();
-  // useEffect(() => {
-  //   onAuthStateChanged(auth, (user) => {
-  //     if (user) {
-  //       const uid = user.uid;
-  //       console.log("UID", user);
-  //     } else {
-  //     }
-  //   });
-  // }, []);
 
-  const loginRequest = async (body, token) => {
-    console.log("body", body);
+  const loginRequest = async (body) => {
     const res = await axios.post(config.urls.auth.logIn(), body, {
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: "Bearer " + getAccessToken(),
       },
     });
-    console.log("res", res.data);
-    dispatch(setUser(body));
+    // console.log("res", res.data);
   };
 
   const handleLogin = () => {
     const provider = new GoogleAuthProvider();
     console.log("clicked");
-
+    dispatch(setLoader(true));
     signInWithPopup(auth, provider)
       .then((result) => {
-        // // This gives you a Google Access Token. You can use it to access the Google API.
-        // const credential = GoogleAuthProvider.credentialFromResult(result);
-
-        // const token = credential.accessToken;
-        // console.log("token", token);
-
         const user = result.user;
-        console.log("user", user);
+        // console.log("user", user);
         const body = {
           name: user.displayName,
           email: user.email,
         };
-        loginRequest(body, user.accessToken);
+
+        // store access token in local storage
+        localStorage.setItem("accessToken", user.accessToken);
+
+        loginRequest(body);
+        dispatch(setUser(body));
       })
       .catch((error) => {
         // Handle Errors here.
         const errorCode = error.code;
         const errorMessage = error.message;
         console.log("error", error);
-        // ...
       });
+    dispatch(setLoader(false));
   };
   // css
   const onOutHover = {
