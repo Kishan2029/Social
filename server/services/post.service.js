@@ -58,7 +58,7 @@ exports.getUserPosts = async function (email) {
     try {
         const user = await User.findOne({ email: email });
         // console.log("user",user)
-        let posts = await Post.find({ createdBy: user._id })
+        let posts = await Post.find({ createdBy: user._id }).sort({ createdAt: -1 })
         posts = posts.map((item) => ({
             ...item._doc,
             name: user.name,
@@ -74,12 +74,37 @@ exports.getUserPosts = async function (email) {
     }
 }
 
+exports.getSavedPosts = async function (email) {
+
+    try {
+        const user = await User.findOne({ email: email });
+        const savedPosts = Promise.all(user.savedPosts.map(async (postId) => {
+            let post = await Post.findById(postId)
+            return (
+                {
+                    post,
+                    name: user.name,
+                    postTime: postCreationTime(post.createdAt)
+                }
+            )
+        }))
+
+        console.log("savedPost", savedPosts);
+        return { statusCode: 200, response: { success: true, data: savedPosts } };
+
+
+    } catch (e) {
+        // Log Errors
+        console.log("error", e)
+    }
+}
+
 exports.getAllPosts = async function () {
 
     try {
         // const user = await User.findOne({ email: email });
         // // console.log("user",user)
-        let posts = await Post.find()
+        let posts = await Post.find().sort({ createdAt: -1 })
         posts = await Promise.all(posts.map(async (item) => {
             // console.log("item", item);
             const user = await User.findById(item._doc.createdBy);
@@ -99,16 +124,76 @@ exports.getAllPosts = async function () {
     }
 }
 
-exports.likePost = async function (postId, like) {
+exports.likePost = async function (email, postId, like) {
+    const user = await User.findOne({ email: email });
+    console.log(user._id)
+    const post = await Post.findById(postId);
+    if (!post) return { statusCode: 400, response: { success: false, message: "Post does not exist" } };
 
-    try {
-        const post = await Post.findById(postId);
-        if (!post) return false;
-
-
-
-    } catch (e) {
-        // Log Errors
-        console.log("error", e)
+    console.log("post", post.likes)
+    const len = post.likes.indexOf(user._id);
+    console.log(len)
+    if (like) {
+        if (len < 0) {
+            post.likes.unshift(user._id);
+            await post.save();
+            return { statusCode: 200, response: { success: true, message: "Post liked" } };
+        } else {
+            return { statusCode: 200, response: { success: true, message: "Already liked post" } };
+        }
     }
+    else {
+        if (len >= 0) {
+            const index = post.likes.indexOf(user._id);
+            post.likes.splice(index, 1);
+            await post.save();
+            return { statusCode: 200, response: { success: true, message: "Post unliked" } };
+        } else {
+            return { statusCode: 200, response: { success: true, message: "Already unliked post" } };
+        }
+    }
+
+
+
+
+
 }
+
+exports.addSavedPost = async function (email, postId, saved) {
+    const user = await User.findOne({ email: email });
+    const savedPosts = user.savedPosts;
+    console.log("savedPost", savedPosts)
+    const post = await Post.findById(postId);
+    if (!post) return { statusCode: 400, response: { success: false, message: "Post does not exist" } };
+
+    const len = savedPosts.indexOf(postId);
+    console.log("postId", postId)
+
+    console.log("len", len)
+    console.log(len)
+    if (saved) {
+        if (len < 0) {
+            savedPosts.unshift(postId);
+            await user.save();
+            return { statusCode: 200, response: { success: true, message: "Saved post", data: savedPosts } };
+        } else {
+            return { statusCode: 200, response: { success: true, message: "Already saved post" } };
+        }
+    }
+    else {
+        if (len >= 0) {
+            const index = savedPosts.indexOf(postId);
+            savedPosts.splice(index, 1);
+            await user.save();
+            return { statusCode: 200, response: { success: true, message: "Unsaved post", data: savedPosts } };
+        } else {
+            return { statusCode: 200, response: { success: true, message: "Already unsaved post" } };
+        }
+    }
+
+
+
+
+
+}
+

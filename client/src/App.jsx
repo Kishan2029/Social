@@ -11,7 +11,6 @@ import { Box } from "@mui/material";
 import { useEffect, useState } from "react";
 import Login from "./page/Login";
 import Home from "./page/Home";
-import Friends from "./page/Friends";
 import SavedPosts from "./page/SavedPosts";
 import Notifications from "./page/Notifications";
 import { useSelector, useDispatch } from "react-redux";
@@ -20,6 +19,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth as firebaseAuth } from "./firebaseConfig";
 import Loading from "./component/Loading";
 import { setLoader } from "./store/slices/loaderSlice";
+import Profile from "./page/Profile";
 
 function App() {
   const auth = useSelector((state) => state.auth.user);
@@ -73,8 +73,7 @@ function App() {
               {["/home", "/"].map((path) => (
                 <Route key={path} index={true} path={path} element={<Home />} />
               ))}
-              {/* <Route path={["/", "/home"]} element={<Home />} /> */}
-              <Route path="/friends" element={<Friends />} />
+              <Route path="/profile" element={<Profile />} />
               <Route path="/savedPosts" element={<SavedPosts />} />
               <Route path="/notifications" element={<Notifications />} />
               {/* <Route path="/logout" element={} /> */}

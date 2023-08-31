@@ -14,7 +14,13 @@ const UserSchema = new mongoose.Schema({
     },
     location: {
         type: String,
-    }
+    },
+
+    savedPosts: [{
+        type: mongoose.Schema.ObjectId,
+        ref: 'post',
+    }]
+
 
 }, { timestamps: true });
 

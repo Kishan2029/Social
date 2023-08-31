@@ -16,7 +16,7 @@ const Home = () => {
 
   // fetch posts
   async function fetchPosts(body) {
-    const { data } = await axios.post(config.urls.post.getUserPosts(), body, {
+    const { data } = await axios.get(config.urls.post.getAllPosts(), {
       headers: {
         Authorization: "Bearer " + getAccessToken(),
       },

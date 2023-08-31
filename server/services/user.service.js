@@ -1,16 +1,12 @@
 var User = require('../models/user.model')
 
-exports.createUser = async function (query, page, limit) {
+exports.getUserInfo = async function (email) {
 
     try {
-        const newUser = new User({
-            name: "kishan",
-            email: "kishan@gmail.com",
-            description: "hello My name is kishan",
-            location: "Pune, India"
-        })
-        await newUser.save();
-        return "Document added";
+        const userInfo = await User.find({ email: email }).select({ description: 1, location: 1, _id: 0 })
+        console.log("user", userInfo);
+        return { statusCode: 200, response: { success: true, data: userInfo[0] } };
+
     } catch (e) {
         // Log Errors
         console.log("error", e)

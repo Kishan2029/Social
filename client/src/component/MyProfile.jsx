@@ -9,7 +9,7 @@ import PeopleIcon from "@mui/icons-material/People";
 import PhotoSizeSelectActualIcon from "@mui/icons-material/PhotoSizeSelectActual";
 import FriendsPic from "../assets/image/friends.png";
 
-const MyProfile = ({ value, setValue }) => {
+const MyProfile = ({ value, setValue, location }) => {
   //   const [value, setValue] = useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -41,9 +41,7 @@ const MyProfile = ({ value, setValue }) => {
         <Typography sx={{ fontSize: "1.6rem", fontWeight: 800 }}>
           John Doe
         </Typography>
-        <Typography sx={{ color: "var(--grayTitle)" }}>
-          Stockholm, Sweden
-        </Typography>
+        <Typography sx={{ color: "var(--grayTitle)" }}>{location}</Typography>
       </Box>
 
       <Box sx={{ mt: "1rem", paddingX: "1rem" }}>

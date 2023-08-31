@@ -18,8 +18,8 @@ export const config = {
       icon: <HomeOutlinedIcon />,
     },
     {
-      name: "friends",
-      title: "Friends",
+      name: "profile",
+      title: "Profile",
       icon: <GroupOutlinedIcon />,
     },
     {
@@ -78,6 +78,14 @@ export const config = {
       },
       getUserPosts: () => {
         return `${import.meta.env.VITE_BACKEND_URL}/post/getUserPosts`;
+      },
+      getAllPosts: () => {
+        return `${import.meta.env.VITE_BACKEND_URL}/post/getAllPosts`;
+      },
+    },
+    user: {
+      getUserInfo: (email) => {
+        return `${import.meta.env.VITE_BACKEND_URL}/user/${email}`;
       },
     },
   },
