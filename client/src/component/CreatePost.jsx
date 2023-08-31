@@ -18,7 +18,7 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import { config } from "../config";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import { getAccessToken } from "../util";
+import { getAccessToken } from "../util/helper";
 
 const CreatePost = () => {
   const [content, setContent] = useState("");

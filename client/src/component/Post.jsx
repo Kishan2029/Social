@@ -15,19 +15,10 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import ShareIcon from "@mui/icons-material/Share";
 
-const Post = () => {
-  const content =
-    "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores, cum cupiditate deleniti ducimus et eveniet ex excepturi fuga magnam, maiores nam pariatur quibusdam, recusandae reprehenderit sapiente sed sint veniam? Beatae.";
-
-  const itemData = [
-    { img: "hello" },
-    { img: "hello1" },
-    { img: "hell2" },
-    { img: "hello3" },
-    { img: "hell4" },
-    { img: "hello5" },
-    { img: "hello6" },
-  ];
+const Post = ({ content, name, imageData, time }) => {
+  // no of colums
+  // const col = imageData.length > 1 ? 2 : 1;
+  // const row = imageData.length
   // css
   const dots = [];
   for (let i = 0; i < 3; i++) {
@@ -67,9 +58,9 @@ const Post = () => {
             }}
           >
             <Typography>
-              <b>John Does </b>shared an album
+              <b>{`${name}`} </b>shared an album
             </Typography>
-            <Typography>2 hours ago</Typography>
+            <Typography>{`${time}`} ago</Typography>
           </Box>
         </Box>
         <Box sx={{ display: "flex", gap: 0.3 }}>{dots}</Box>
@@ -83,12 +74,23 @@ const Post = () => {
       </Typography>
 
       {/* images */}
-      <ImageList sx={{ height: 500 }} cols={2} rowHeight={300}>
-        {itemData.map((item) => (
-          <ImageListItem key={item.img}>
-            <img src={pic1} loading="lazy" style={{ borderRadius: "0.4rem" }} />
-          </ImageListItem>
-        ))}
+      <ImageList sx={{ height: 400 }} cols={2} rowHeight={300}>
+        {imageData.map((item) => {
+          const blob = new Blob([Int8Array.from(item.data.data)], {
+            type: item.contentType,
+          });
+
+          const image = window.URL.createObjectURL(blob);
+          return (
+            <ImageListItem key={item._id}>
+              <img
+                src={image}
+                loading="lazy"
+                style={{ borderRadius: "0.4rem" }}
+              />
+            </ImageListItem>
+          );
+        })}
       </ImageList>
 
       {/* Link, Comment, Share */}

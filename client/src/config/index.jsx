@@ -76,6 +76,9 @@ export const config = {
       createPost: () => {
         return `${import.meta.env.VITE_BACKEND_URL}/post/createPost`;
       },
+      getUserPosts: () => {
+        return `${import.meta.env.VITE_BACKEND_URL}/post/getUserPosts`;
+      },
     },
   },
 };

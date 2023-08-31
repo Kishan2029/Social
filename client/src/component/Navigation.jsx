@@ -4,7 +4,7 @@ import { config } from "../config";
 import { redirect, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setUser } from "../store/slices/authSlice";
-import { removeAccessToken } from "../util";
+import { removeAccessToken } from "../util/helper";
 import { signOut } from "firebase/auth";
 import { auth } from "../firebaseConfig";
 // import { auth } from "../firebaseConfig";

@@ -5,6 +5,8 @@ const PostController = require("../controllers/post.controller");
 
 
 router.post('/createPost', imageUpload, PostController.createPost)
-router.post('/getPosts', PostController.getPosts)
+router.post('/getUserPosts', PostController.getUserPosts)
+router.get('/getAllPosts', PostController.getAllPosts)
+router.post('/likePost', PostController.likePost)
 
 module.exports = router;

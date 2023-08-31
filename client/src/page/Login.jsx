@@ -13,19 +13,18 @@ import { auth } from "../firebaseConfig";
 
 import { useSelector, useDispatch } from "react-redux";
 import { setUser } from "../store/slices/authSlice";
-import { getAccessToken } from "../util";
+import { getAccessToken } from "../util/helper";
 import { setLoader } from "../store/slices/loaderSlice";
 
 const Login = () => {
   const dispatch = useDispatch();
-
+  console.log("login page");
   const loginRequest = async (body) => {
     const res = await axios.post(config.urls.auth.logIn(), body, {
       headers: {
         Authorization: "Bearer " + getAccessToken(),
       },
     });
-    // console.log("res", res.data);
   };
 
   const handleLogin = () => {

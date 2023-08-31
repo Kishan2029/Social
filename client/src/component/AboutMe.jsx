@@ -1,6 +1,6 @@
 import { Card, Typography } from "@mui/material";
 import React from "react";
-import { stringSplit } from "../util";
+import { stringSplit } from "../util/helper";
 
 const AboutMe = () => {
   const content =

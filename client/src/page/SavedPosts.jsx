@@ -3,6 +3,7 @@ import React from "react";
 import Post from "../component/Post";
 
 const SavedPosts = () => {
+  console.log("savedPosts page");
   const posts = [{ name: "hello" }, { name: "hello2" }];
   return (
     <Box>

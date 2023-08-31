@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 
 const Notifications = () => {
+  console.log("notification page");
   const friends = [
     { name: "John Doe", friends: 6 },
     { name: "John Doe", friends: 6 },

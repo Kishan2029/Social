@@ -9,6 +9,7 @@ import FriendsTab from "../component/FriendsTab";
 import Photos from "../component/Photos";
 
 const Friends = () => {
+  console.log("friends page");
   const [value, setValue] = useState("1");
   return (
     <TabContext value={value}>

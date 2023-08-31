@@ -44,7 +44,7 @@ function App() {
         };
 
         // // store access token in local storage
-        // localStorage.setItem("accessToken", user.accessToken);
+        localStorage.setItem("accessToken", user.accessToken);
 
         // loginRequest(body);
         dispatch(setUser(body));
@@ -69,7 +69,11 @@ function App() {
           {/* Routing */}
           <Box sx={{ width: "75%" }}>
             <Routes>
-              <Route index={true} path="/home" element={<Home />} />
+              {/* <Route path="/" element={navi} /> */}
+              {["/home", "/"].map((path) => (
+                <Route key={path} index={true} path={path} element={<Home />} />
+              ))}
+              {/* <Route path={["/", "/home"]} element={<Home />} /> */}
               <Route path="/friends" element={<Friends />} />
               <Route path="/savedPosts" element={<SavedPosts />} />
               <Route path="/notifications" element={<Notifications />} />
