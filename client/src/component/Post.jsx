@@ -19,6 +19,7 @@ const Post = ({ content, name, imageData, time }) => {
   // no of colums
   // const col = imageData.length > 1 ? 2 : 1;
   // const row = imageData.length
+
   // css
   const dots = [];
   for (let i = 0; i < 3; i++) {
@@ -74,24 +75,26 @@ const Post = ({ content, name, imageData, time }) => {
       </Typography>
 
       {/* images */}
-      <ImageList sx={{ height: 400 }} cols={2} rowHeight={300}>
-        {imageData.map((item) => {
-          const blob = new Blob([Int8Array.from(item.data.data)], {
-            type: item.contentType,
-          });
+      {imageData.length > 0 && (
+        <ImageList sx={{ height: 400 }} cols={2} rowHeight={300}>
+          {imageData.map((item) => {
+            const blob = new Blob([Int8Array.from(item.data.data)], {
+              type: item.contentType,
+            });
 
-          const image = window.URL.createObjectURL(blob);
-          return (
-            <ImageListItem key={item._id}>
-              <img
-                src={image}
-                loading="lazy"
-                style={{ borderRadius: "0.4rem" }}
-              />
-            </ImageListItem>
-          );
-        })}
-      </ImageList>
+            const image = window.URL.createObjectURL(blob);
+            return (
+              <ImageListItem key={item._id}>
+                <img
+                  src={image}
+                  loading="lazy"
+                  style={{ borderRadius: "0.4rem" }}
+                />
+              </ImageListItem>
+            );
+          })}
+        </ImageList>
+      )}
 
       {/* Link, Comment, Share */}
       <Box sx={{ display: "flex", gap: 5 }}>

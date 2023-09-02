@@ -21,18 +21,16 @@ const Home = () => {
         Authorization: "Bearer " + getAccessToken(),
       },
     });
-
-    dispatch(setLoader(false));
     return data;
   }
 
-  const { data, error, isError, isLoading } = useQuery("posts", () =>
-    fetchPosts({ email: auth.email })
-  );
-  console.log("data", data);
+  const { data, error, isError, isLoading } = useQuery({
+    queryFn: () => fetchPosts({ email: auth.email }),
+    queryKey: ["posts", "userPosts"],
+  });
+
   if (isLoading) {
     return <Loading />;
-    // dispatch(setLoader(true));
   }
 
   return (

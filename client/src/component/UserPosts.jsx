@@ -23,15 +23,16 @@ const UserPosts = () => {
     return data;
   }
 
-  const { data, error, isError, isLoading } = useQuery("posts", () =>
-    fetchUserPosts({ email: auth.email })
-  );
+  const { data, error, isError, isLoading } = useQuery({
+    queryFn: () => fetchUserPosts({ email: auth.email }),
+    queryKey: ["userPosts"],
+  });
   console.log("data", data);
   if (isLoading) {
     return <Loading />;
   }
   return (
-    <Box>
+    <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
       {data.map((post) => {
         return (
           <Post

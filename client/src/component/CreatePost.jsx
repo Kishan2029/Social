@@ -8,7 +8,7 @@ import {
   TextareaAutosize,
   makeStyles,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 // import { makeStyles } from "@material-ui/core/styles";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt";
@@ -19,11 +19,14 @@ import { config } from "../config";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { getAccessToken } from "../util/helper";
+import { QueryClient, useMutation, useQueryClient } from "react-query";
+import Loading from "./Loading";
 
 const CreatePost = () => {
   const [content, setContent] = useState("");
   const [image, setImage] = useState(null);
   const auth = useSelector((state) => state.auth.user);
+  const queryClient = useQueryClient();
 
   const createPostRequest = async (body) => {
     const res = await axios.post(config.urls.post.createPost(), body, {
@@ -35,28 +38,34 @@ const CreatePost = () => {
     console.log("res", res);
   };
 
+  const mutation = useMutation({
+    mutationFn: (body) => createPostRequest(body),
+    onSuccess: async () => {
+      console.log("mutation 1");
+      await queryClient.invalidateQueries(["posts"]);
+      console.log("mutation 2");
+    },
+  });
+
   //onClick
   const onShare = () => {
-    console.log("content", content);
-    console.log("image", image);
     var formData = new FormData();
 
-    image.map((item) => {
+    image?.map((item) => {
       formData.append("images", item);
     });
 
     formData.append("email", auth.email);
     formData.append("content", content);
-    // const post = {
-    //   email: auth.email,
-    //   content,
-    //   image: formData,
-    // };
     const post = formData;
-
-    createPostRequest(post);
+    mutation.mutate(post);
+    setContent("");
+    setImage(null);
   };
 
+  useEffect(() => {
+    console.log("mutation", mutation.status);
+  }, [mutation]);
   // styled component
   //   const useStyles = makeStyles((theme) => ({
   //     root: {
@@ -69,6 +78,10 @@ const CreatePost = () => {
   //     },
   //   }));
   //   const classes = useStyles();
+
+  // if (mutation.isLoading) return <Loading />;
+  // else if (mutation.isSuccess) return "Success";
+
   return (
     <Card sx={{ padding: "1rem", fontWeight: 300 }}>
       <Box sx={{ display: "flex", gap: 2 }}>
@@ -128,7 +141,6 @@ const CreatePost = () => {
                 <CancelIcon
                   sx={{ alignSelf: "start" }}
                   onClick={() => {
-                    console.log("item", item.name);
                     setImage((prevState) => {
                       return prevState.filter(
                         (image) => image.name !== item.name
@@ -175,7 +187,6 @@ const CreatePost = () => {
               multiple
               // value={image}
               onChange={(event) => {
-                console.log("file", event.target.files);
                 // setImage(event.target.files[0]);
                 setImage(Object.values(event.target.files));
               }}

@@ -1,8 +1,31 @@
 import { Box, Card, ImageList, ImageListItem } from "@mui/material";
 import pic1 from "../assets/image/pic1.jpeg";
 import React from "react";
+import { config } from "../config";
+import { getAccessToken } from "../util/helper";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { useQuery } from "react-query";
 
 const Photos = () => {
+  const auth = useSelector((state) => state.auth.user);
+  // fetch friends
+  async function fetchPhots(email) {
+    console.log("url", config.urls.user.getPhotos(email));
+    const { data } = await axios.get(config.urls.user.getPhotos(email), {
+      headers: {
+        Authorization: "Bearer " + getAccessToken(),
+      },
+    });
+    return data.data;
+  }
+
+  const { data, error, isError, isLoading } = useQuery({
+    queryFn: () => fetchPhots(auth.email),
+    queryKey: ["userPhots"],
+  });
+
+  console.log("photos", data);
   const itemData = [
     { img: "hello" },
     { img: "hello1" },
@@ -19,14 +42,24 @@ const Photos = () => {
         // sx={{ width: 500, height: 450 }}
         variant="masonry"
         cols={2}
-        // rowHeight={200}
+        rowHeight={200}
         gap={12}
       >
-        {itemData.map((item) => (
-          <ImageListItem key={item.img}>
-            <img src={pic1} loading="lazy" style={{ borderRadius: "0.4rem" }} />
-          </ImageListItem>
-        ))}
+        {data.map((item, index) => {
+          const blob = new Blob([Int8Array.from(item.data.data)], {
+            type: item.contentType,
+          });
+          const image = window.URL.createObjectURL(blob);
+          return (
+            <ImageListItem key={index}>
+              <img
+                src={image}
+                loading="lazy"
+                style={{ borderRadius: "0.4rem" }}
+              />
+            </ImageListItem>
+          );
+        })}
       </ImageList>
     </Card>
   );

@@ -16,6 +16,7 @@ import { useSelector } from "react-redux";
 
 const Profile = () => {
   const auth = useSelector((state) => state.auth.user);
+  const [value, setValue] = useState("2");
   // fetch user posts
   async function fetchUserInfo(email) {
     console.log("hello");
@@ -39,7 +40,6 @@ const Profile = () => {
     return <Loading />;
   }
 
-  const [value, setValue] = useState("1");
   return (
     <TabContext value={value}>
       <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>

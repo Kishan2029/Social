@@ -89,7 +89,6 @@ exports.getSavedPosts = async function (email) {
             )
         }))
 
-        console.log("savedPost", savedPosts);
         return { statusCode: 200, response: { success: true, data: savedPosts } };
 
 
@@ -167,10 +166,7 @@ exports.addSavedPost = async function (email, postId, saved) {
     if (!post) return { statusCode: 400, response: { success: false, message: "Post does not exist" } };
 
     const len = savedPosts.indexOf(postId);
-    console.log("postId", postId)
 
-    console.log("len", len)
-    console.log(len)
     if (saved) {
         if (len < 0) {
             savedPosts.unshift(postId);
@@ -190,10 +186,6 @@ exports.addSavedPost = async function (email, postId, saved) {
             return { statusCode: 200, response: { success: true, message: "Already unsaved post" } };
         }
     }
-
-
-
-
 
 }
 

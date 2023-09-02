@@ -12,7 +12,6 @@ exports.createPost = async function (req, res, next) {
     }
 }
 
-
 exports.getUserPosts = async function (req, res, next) {
     try {
         const { email } = req.body;

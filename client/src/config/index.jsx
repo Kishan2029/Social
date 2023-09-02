@@ -87,6 +87,12 @@ export const config = {
       getUserInfo: (email) => {
         return `${import.meta.env.VITE_BACKEND_URL}/user/${email}`;
       },
+      getFriends: (email) => {
+        return `${import.meta.env.VITE_BACKEND_URL}/user/getFriends/${email}`;
+      },
+      getPhotos: (email) => {
+        return `${import.meta.env.VITE_BACKEND_URL}/user/getPhotos/${email}`;
+      },
     },
   },
 };
