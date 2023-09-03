@@ -18,7 +18,7 @@ import { setLoader } from "../store/slices/loaderSlice";
 
 const Login = () => {
   const dispatch = useDispatch();
-  console.log("login page");
+
   const loginRequest = async (body) => {
     const res = await axios.post(config.urls.auth.logIn(), body, {
       headers: {
@@ -29,7 +29,7 @@ const Login = () => {
 
   const handleLogin = () => {
     const provider = new GoogleAuthProvider();
-    console.log("clicked");
+
     dispatch(setLoader(true));
     signInWithPopup(auth, provider)
       .then((result) => {

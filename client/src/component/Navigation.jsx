@@ -62,7 +62,6 @@ const Navigation = () => {
               }}
               key={item.title}
               onClick={() => {
-                console.log("clicked", item.name);
                 if (item.name === "logout") {
                   logout();
                 } else {

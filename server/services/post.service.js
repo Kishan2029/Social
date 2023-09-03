@@ -53,6 +53,21 @@ exports.createPost = async function (body, file) {
     }
 }
 
+exports.deletePost = async function (email, postId) {
+    const user = await User.findOne({ email: email });
+
+    const userId = user._id;
+    const post = await Post.findById(postId);
+    if (!post) return { statusCode: 400, response: { success: false, message: "Post does not exist" } };
+    if (userId !== post.createdBy) return { statusCode: 400, response: { success: false, message: "Post is not created by user" } };
+
+    // const len = savedPosts.indexOf(postId);
+
+    await post.deleteOne();
+
+    return { statusCode: 200, response: { success: true, message: "Post is deleted" } };
+
+}
 exports.getUserPosts = async function (email) {
 
     try {
@@ -78,17 +93,19 @@ exports.getSavedPosts = async function (email) {
 
     try {
         const user = await User.findOne({ email: email });
-        const savedPosts = Promise.all(user.savedPosts.map(async (postId) => {
-            let post = await Post.findById(postId)
+        console.log(user.savedPosts)
+        const savedPosts = await Promise.all(user.savedPosts.map(async (postId) => {
+            let post = await Post.findById(postId);
+            // console.log(post)
             return (
                 {
-                    post,
+                    ...post._doc,
                     name: user.name,
                     postTime: postCreationTime(post.createdAt)
                 }
             )
         }))
-
+        console.log("savedPost", savedPosts)
         return { statusCode: 200, response: { success: true, data: savedPosts } };
 
 
@@ -189,3 +206,19 @@ exports.addSavedPost = async function (email, postId, saved) {
 
 }
 
+
+exports.hidePost = async function (email, postId, hide) {
+    const user = await User.findOne({ email: email });
+    // console.log(user)
+    const userId = user._id;
+    const post = await Post.findById(postId);
+    if (!post) return { statusCode: 400, response: { success: false, message: "Post does not exist" } };
+    if (userId !== post.createdBy) return { statusCode: 400, response: { success: false, message: "Post is not created by user" } };
+
+    // const len = savedPosts.indexOf(postId);
+    post.hide = hide;
+    await post.save();
+    const message = hide ? "Post is hidden" : "Post is visible"
+    return { statusCode: 200, response: { success: true, message } };
+
+}

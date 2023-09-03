@@ -19,7 +19,6 @@ const Profile = () => {
   const [value, setValue] = useState("2");
   // fetch user posts
   async function fetchUserInfo(email) {
-    console.log("hello");
     const { data } = await axios.get(config.urls.user.getUserInfo(email), {
       headers: {
         Authorization: "Bearer " + getAccessToken(),
@@ -33,8 +32,6 @@ const Profile = () => {
   const { data, error, isError, isLoading } = useQuery("userInfo", () =>
     fetchUserInfo(auth.email)
   );
-  console.log("email", auth.email);
-  console.log("data", data);
 
   if (isLoading) {
     return <Loading />;

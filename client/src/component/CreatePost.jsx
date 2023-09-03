@@ -35,15 +35,12 @@ const CreatePost = () => {
         "Content-Type": "multipart/formdata",
       },
     });
-    console.log("res", res);
   };
 
   const mutation = useMutation({
     mutationFn: (body) => createPostRequest(body),
     onSuccess: async () => {
-      console.log("mutation 1");
-      await queryClient.invalidateQueries(["posts"]);
-      console.log("mutation 2");
+      await queryClient.invalidateQueries(["posts", "userPhotos", "userPosts"]);
     },
   });
 
@@ -63,9 +60,6 @@ const CreatePost = () => {
     setImage(null);
   };
 
-  useEffect(() => {
-    console.log("mutation", mutation.status);
-  }, [mutation]);
   // styled component
   //   const useStyles = makeStyles((theme) => ({
   //     root: {

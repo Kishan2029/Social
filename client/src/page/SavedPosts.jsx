@@ -1,10 +1,23 @@
 import { Box, Typography } from "@mui/material";
 import React from "react";
 import Post from "../component/Post";
+import { useSelector } from "react-redux";
+import { useQuery } from "react-query";
+import { fetchSavedPosts } from "../reactQuery/query";
+import Loading from "../component/Loading";
 
 const SavedPosts = () => {
-  console.log("savedPosts page");
-  const posts = [{ name: "hello" }, { name: "hello2" }];
+  const auth = useSelector((state) => state.auth.user);
+
+  const { data, error, isError, isLoading } = useQuery({
+    queryFn: () => fetchSavedPosts({ email: auth.email }),
+    queryKey: ["savedPosts"],
+  });
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
   return (
     <Box>
       <Typography
@@ -14,10 +27,16 @@ const SavedPosts = () => {
       </Typography>
 
       <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
-        {/* <Post />
-        <Post /> */}
-        {posts.map((item) => {
-          return <Post key={item.name} />;
+        {data.map((post) => {
+          return (
+            <Post
+              key={post._id}
+              name={post.name}
+              time={post.postTime}
+              content={post.content}
+              imageData={post.images}
+            />
+          );
         })}
       </Box>
     </Box>

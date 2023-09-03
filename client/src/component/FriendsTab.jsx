@@ -10,6 +10,7 @@ import { config } from "../config";
 import { getAccessToken } from "../util/helper";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
+import Loading from "./Loading";
 
 const FriendsTab = () => {
   const auth = useSelector((state) => state.auth.user);
@@ -29,7 +30,7 @@ const FriendsTab = () => {
     queryKey: ["userFriends"],
   });
 
-  console.log("friends", data);
+  if (isLoading) return <Loading />;
 
   return (
     <Card sx={{ padding: "1rem" }}>

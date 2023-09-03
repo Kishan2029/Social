@@ -6,6 +6,7 @@ import { getAccessToken } from "../util/helper";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { useQuery } from "react-query";
+import Loading from "./Loading";
 
 const Photos = () => {
   const auth = useSelector((state) => state.auth.user);
@@ -22,19 +23,11 @@ const Photos = () => {
 
   const { data, error, isError, isLoading } = useQuery({
     queryFn: () => fetchPhots(auth.email),
-    queryKey: ["userPhots"],
+    queryKey: ["userPhotos"],
   });
 
-  console.log("photos", data);
-  const itemData = [
-    { img: "hello" },
-    { img: "hello1" },
-    { img: "hell2" },
-    { img: "hello3" },
-    { img: "hell4" },
-    { img: "hello5" },
-    { img: "hello6" },
-  ];
+  if (isLoading) return <Loading />;
+
   return (
     <Card sx={{ padding: "1rem", pt: "0" }}>
       {/* images */}

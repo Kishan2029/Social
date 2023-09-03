@@ -26,7 +26,7 @@ const Home = () => {
 
   const { data, error, isError, isLoading } = useQuery({
     queryFn: () => fetchPosts({ email: auth.email }),
-    queryKey: ["posts", "userPosts"],
+    queryKey: ["posts"],
   });
 
   if (isLoading) {
@@ -40,6 +40,7 @@ const Home = () => {
         return (
           <Post
             key={post._id}
+            postId={post._id}
             name={post.name}
             time={post.postTime}
             content={post.content}

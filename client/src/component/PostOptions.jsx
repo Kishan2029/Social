@@ -1,0 +1,88 @@
+import React from "react";
+import { Box, Card, Typography } from "@mui/material";
+import { config } from "../config";
+import { useMutation, useQueryClient } from "react-query";
+import { savePost, deletePost, hidePost } from "../reactQuery/mutation";
+import { useSelector } from "react-redux";
+
+const PostOptions = ({ postId }) => {
+  const auth = useSelector((state) => state.auth.user);
+  const queryClient = useQueryClient();
+  // mutations
+  const savePostMutation = useMutation({
+    mutationFn: (body) => savePost(body),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(["savedPosts"]);
+    },
+  });
+
+  const onHover = {
+    backgroundColor: "#218DFA",
+    fontSize: "1rem",
+    color: "white",
+    zIndex: 2000,
+  };
+  return (
+    <Card
+      sx={{
+        padding: "1rem 0.5rem",
+        borderRadius: "0.3rem",
+      }}
+      raised
+    >
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          //   mt: "1rem",
+          gap: "0.4rem",
+          width: "100%",
+        }}
+      >
+        {config.postOptions.map((item) => {
+          return (
+            <Box
+              component="a"
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: "0.6rem",
+                padding: "0.6rem 1rem",
+                // width: "20rem",
+                borderRadius: "0.5rem",
+                fontSize: "0.9rem",
+                "&:hover": onHover,
+              }}
+              key={item.title}
+              onClick={() => {
+                if (item.name === "savePost") {
+                  savePostMutation.mutate({
+                    email: auth.email,
+                    postId: postId,
+                    saved: true,
+                  });
+                } else if (item.name === "hidePost") {
+                  console.log("hidePost");
+                } else if (item.name === "delete") {
+                  console.log("delete");
+                }
+              }}
+            >
+              {item.icon}
+              <Typography
+                sx={{
+                  fontWeight: 300,
+                  font: "inherit",
+                }}
+              >
+                {item.title}
+              </Typography>
+            </Box>
+          );
+        })}
+      </Box>
+    </Card>
+  );
+};
+
+export default PostOptions;

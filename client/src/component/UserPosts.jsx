@@ -27,7 +27,7 @@ const UserPosts = () => {
     queryFn: () => fetchUserPosts({ email: auth.email }),
     queryKey: ["userPosts"],
   });
-  console.log("data", data);
+  // console.log("data", data);
   if (isLoading) {
     return <Loading />;
   }

@@ -26,13 +26,12 @@ function App() {
   const loader = useSelector((state) => state.loader.value);
 
   const dispatch = useDispatch();
-  // console.log("auth", auth);
 
   const location = useLocation();
 
-  useEffect(() => {
-    console.log("loader", loader);
-  }, [loader]);
+  // useEffect(() => {
+  //   console.log("loader", loader);
+  // }, [loader]);
 
   const functionToChangeState = () => {
     // dispatch(setLoader(true));

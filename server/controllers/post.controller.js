@@ -23,6 +23,17 @@ exports.getUserPosts = async function (req, res, next) {
     }
 }
 
+exports.deletePost = async function (req, res, next) {
+    try {
+        const { email, postId } = req.body;
+        const response = await PostService.deletePost(email, postId);
+        res.status(200).send(response);
+    }
+    catch (error) {
+        next(error);
+    }
+}
+
 exports.getSavedPosts = async function (req, res, next) {
     try {
         const { email } = req.body;
@@ -59,6 +70,17 @@ exports.addSavedPost = async function (req, res, next) {
     const { email, postId, saved } = req.body;
     try {
         const { statusCode, response } = await PostService.addSavedPost(email, postId, saved);
+        res.status(statusCode).send(response);
+    }
+    catch (error) {
+        next(error);
+    }
+}
+
+exports.hidePost = async function (req, res, next) {
+    const { email, postId, hide } = req.body;
+    try {
+        const { statusCode, response } = await PostService.hidePost(email, postId, hide);
         res.status(statusCode).send(response);
     }
     catch (error) {

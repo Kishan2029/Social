@@ -9,6 +9,11 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import ShareIcon from "@mui/icons-material/Share";
+import ClearIcon from "@mui/icons-material/Clear";
+import ReportGmailerrorredIcon from "@mui/icons-material/ReportGmailerrorred";
+import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
+import WarningAmberIcon from "@mui/icons-material/WarningAmber";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 export const config = {
   navBar: [
@@ -36,6 +41,33 @@ export const config = {
       name: "logout",
       title: "Logout",
       icon: <LogoutIcon />,
+    },
+  ],
+  postOptions: [
+    {
+      name: "savePost",
+      title: "Save post",
+      icon: <BookmarkBorderIcon />,
+    },
+    {
+      name: "turnNotification",
+      title: "Turn notifications",
+      icon: <NotificationsActiveIcon />,
+    },
+    {
+      name: "hidePost",
+      title: "Hide post",
+      icon: <ClearIcon />,
+    },
+    {
+      name: "delete",
+      title: "Delete",
+      icon: <DeleteOutlineIcon />,
+    },
+    {
+      name: "report",
+      title: "Report",
+      icon: <WarningAmberIcon />,
     },
   ],
   loginItems: [
@@ -81,6 +113,18 @@ export const config = {
       },
       getAllPosts: () => {
         return `${import.meta.env.VITE_BACKEND_URL}/post/getAllPosts`;
+      },
+      getSavedPosts: () => {
+        return `${import.meta.env.VITE_BACKEND_URL}/post/getSavedPosts`;
+      },
+      hidePost: () => {
+        return `${import.meta.env.VITE_BACKEND_URL}/post/hidePost`;
+      },
+      deletePost: () => {
+        return `${import.meta.env.VITE_BACKEND_URL}/post/deletePost`;
+      },
+      savePost: () => {
+        return `${import.meta.env.VITE_BACKEND_URL}/post/savePost`;
       },
     },
     user: {

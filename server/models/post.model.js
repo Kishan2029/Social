@@ -20,6 +20,10 @@ const PostSchema = new mongoose.Schema({
     }],
     comments: {
         type: String,
+    },
+    hide: {
+        type: Boolean,
+        default: false
     }
 
 }, { timestamps: true });
