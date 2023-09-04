@@ -45,6 +45,8 @@ const Home = () => {
             time={post.postTime}
             content={post.content}
             imageData={post.images}
+            saved={post.saved}
+            owner={post.owner}
           />
         );
       })}

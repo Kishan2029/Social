@@ -31,10 +31,13 @@ const SavedPosts = () => {
           return (
             <Post
               key={post._id}
+              postId={post._id}
               name={post.name}
               time={post.postTime}
               content={post.content}
               imageData={post.images}
+              saved={post.saved}
+              owner={post.owner}
             />
           );
         })}

@@ -14,6 +14,7 @@ import ReportGmailerrorredIcon from "@mui/icons-material/ReportGmailerrorred";
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
 
 export const config = {
   navBar: [
@@ -45,9 +46,15 @@ export const config = {
   ],
   postOptions: [
     {
+      name: "unsavePost",
+      title: "Unsave post",
+
+      icon: <BookmarkBorderIcon />,
+    },
+    {
       name: "savePost",
       title: "Save post",
-      icon: <BookmarkBorderIcon />,
+      icon: <BookmarkIcon />,
     },
     {
       name: "turnNotification",

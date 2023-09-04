@@ -26,8 +26,9 @@ exports.getUserPosts = async function (req, res, next) {
 exports.deletePost = async function (req, res, next) {
     try {
         const { email, postId } = req.body;
-        const response = await PostService.deletePost(email, postId);
-        res.status(200).send(response);
+        const { statusCode, response } = await PostService.deletePost(email, postId);
+        console.log("response", response)
+        res.status(statusCode).send(response);
     }
     catch (error) {
         next(error);

@@ -27,6 +27,10 @@ const postCreationTime = (date) => {
         return Math.floor(seconds_difference) + " seconds";
 }
 
+const isUserOwner = (userId, postId) => {
+    return String(userId) === String(postId);
+}
+
 exports.createPost = async function (body, file) {
     const { email, content } = body;
     console.log("image", file);
@@ -58,8 +62,11 @@ exports.deletePost = async function (email, postId) {
 
     const userId = user._id;
     const post = await Post.findById(postId);
+
     if (!post) return { statusCode: 400, response: { success: false, message: "Post does not exist" } };
-    if (userId !== post.createdBy) return { statusCode: 400, response: { success: false, message: "Post is not created by user" } };
+    console.log("user", userId)
+    console.log("post", post.createdBy)
+    if (String(userId) !== String(post.createdBy)) return { statusCode: 400, response: { success: false, message: "Post is not created by user" } };
 
     // const len = savedPosts.indexOf(postId);
 
@@ -68,6 +75,7 @@ exports.deletePost = async function (email, postId) {
     return { statusCode: 200, response: { success: true, message: "Post is deleted" } };
 
 }
+
 exports.getUserPosts = async function (email) {
 
     try {
@@ -77,8 +85,9 @@ exports.getUserPosts = async function (email) {
         posts = posts.map((item) => ({
             ...item._doc,
             name: user.name,
-            postTime: postCreationTime(item._doc.createdAt)
-
+            postTime: postCreationTime(item._doc.createdAt),
+            saved: user.savedPosts.includes(item._id) ? true : false,
+            owner: true
         }))
         console.log("posts", posts);
         return posts;
@@ -94,17 +103,23 @@ exports.getSavedPosts = async function (email) {
     try {
         const user = await User.findOne({ email: email });
         console.log(user.savedPosts)
-        const savedPosts = await Promise.all(user.savedPosts.map(async (postId) => {
+        let savedPosts = await Promise.all(user.savedPosts.map(async (postId) => {
             let post = await Post.findById(postId);
             // console.log(post)
-            return (
-                {
-                    ...post._doc,
-                    name: user.name,
-                    postTime: postCreationTime(post.createdAt)
-                }
-            )
+            if (post)
+                return (
+                    {
+                        ...post._doc,
+                        name: user.name,
+                        postTime: postCreationTime(post.createdAt),
+                        saved: true,
+                        owner: isUserOwner(user._id, post.createdBy)
+                    }
+                )
+
+
         }))
+        savedPosts = savedPosts.filter((item) => item)
         console.log("savedPost", savedPosts)
         return { statusCode: 200, response: { success: true, data: savedPosts } };
 
@@ -128,7 +143,9 @@ exports.getAllPosts = async function () {
             return {
                 ...item._doc,
                 name: user.name,
-                postTime: postCreationTime(item._doc.createdAt)
+                postTime: postCreationTime(item._doc.createdAt),
+                saved: user.savedPosts.includes(item._id) ? true : false,
+                owner: isUserOwner(user._id, item.createdBy)
             }
         }))
         console.log("posts", posts);

@@ -5,7 +5,7 @@ import { useMutation, useQueryClient } from "react-query";
 import { savePost, deletePost, hidePost } from "../reactQuery/mutation";
 import { useSelector } from "react-redux";
 
-const PostOptions = ({ postId }) => {
+const PostOptions = ({ postId, saved, owner, setOption }) => {
   const auth = useSelector((state) => state.auth.user);
   const queryClient = useQueryClient();
   // mutations
@@ -13,6 +13,13 @@ const PostOptions = ({ postId }) => {
     mutationFn: (body) => savePost(body),
     onSuccess: async () => {
       await queryClient.invalidateQueries(["savedPosts"]);
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (body) => deletePost(body),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(["posts", "userPhotos", "userPosts"]);
     },
   });
 
@@ -40,6 +47,15 @@ const PostOptions = ({ postId }) => {
         }}
       >
         {config.postOptions.map((item) => {
+          if (saved) {
+            if (item.name === "savePost") return;
+          } else {
+            if (item.name === "unsavePost") return;
+          }
+
+          if (!owner) {
+            if (item.name === "hidePost" || item.name === "delete") return;
+          }
           return (
             <Box
               component="a"
@@ -55,17 +71,22 @@ const PostOptions = ({ postId }) => {
               }}
               key={item.title}
               onClick={() => {
-                if (item.name === "savePost") {
+                if (item.name === "savePost" || item.name === "unsavePost") {
                   savePostMutation.mutate({
                     email: auth.email,
                     postId: postId,
-                    saved: true,
+                    saved: saved ? false : true,
                   });
                 } else if (item.name === "hidePost") {
                   console.log("hidePost");
                 } else if (item.name === "delete") {
                   console.log("delete");
+                  deleteMutation.mutate({
+                    email: auth.email,
+                    postId: postId,
+                  });
                 }
+                setOption(false);
               }}
             >
               {item.icon}
