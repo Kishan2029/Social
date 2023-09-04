@@ -38,6 +38,8 @@ const SavedPosts = () => {
               imageData={post.images}
               saved={post.saved}
               owner={post.owner}
+              hide={post.hide}
+              pageName={"savePost"}
             />
           );
         })}

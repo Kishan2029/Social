@@ -5,7 +5,7 @@ import { useMutation, useQueryClient } from "react-query";
 import { savePost, deletePost, hidePost } from "../reactQuery/mutation";
 import { useSelector } from "react-redux";
 
-const PostOptions = ({ postId, saved, owner, setOption }) => {
+const PostOptions = ({ postId, saved, owner, hide, pageName, setOption }) => {
   const auth = useSelector((state) => state.auth.user);
   const queryClient = useQueryClient();
   // mutations
@@ -20,6 +20,13 @@ const PostOptions = ({ postId, saved, owner, setOption }) => {
     mutationFn: (body) => deletePost(body),
     onSuccess: async () => {
       await queryClient.invalidateQueries(["posts", "userPhotos", "userPosts"]);
+    },
+  });
+
+  const hideMutation = useMutation({
+    mutationFn: (body) => hidePost(body),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(["posts", "userPosts"]);
     },
   });
 
@@ -53,8 +60,28 @@ const PostOptions = ({ postId, saved, owner, setOption }) => {
             if (item.name === "unsavePost") return;
           }
 
+          if (pageName === "savePost") {
+            if (
+              item.name === "hidePost" ||
+              item.name === "seePost" ||
+              item.name === "delete"
+            )
+              return;
+          }
+
           if (!owner) {
-            if (item.name === "hidePost" || item.name === "delete") return;
+            if (
+              item.name === "hidePost" ||
+              item.name === "seePost" ||
+              item.name === "delete"
+            )
+              return;
+          } else {
+            if (hide) {
+              if (item.name === "hidePost") return;
+            } else {
+              if (item.name === "seePost") return;
+            }
           }
           return (
             <Box
@@ -77,8 +104,15 @@ const PostOptions = ({ postId, saved, owner, setOption }) => {
                     postId: postId,
                     saved: saved ? false : true,
                   });
-                } else if (item.name === "hidePost") {
-                  console.log("hidePost");
+                } else if (
+                  item.name === "hidePost" ||
+                  item.name === "seePost"
+                ) {
+                  hideMutation.mutate({
+                    email: auth.email,
+                    postId: postId,
+                    hide: hide ? false : true,
+                  });
                 } else if (item.name === "delete") {
                   console.log("delete");
                   deleteMutation.mutate({

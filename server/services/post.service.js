@@ -28,6 +28,7 @@ const postCreationTime = (date) => {
 }
 
 const isUserOwner = (userId, postId) => {
+
     return String(userId) === String(postId);
 }
 
@@ -135,7 +136,7 @@ exports.getAllPosts = async function () {
     try {
         // const user = await User.findOne({ email: email });
         // // console.log("user",user)
-        let posts = await Post.find().sort({ createdAt: -1 })
+        var posts = await Post.find().sort({ createdAt: -1 })
         posts = await Promise.all(posts.map(async (item) => {
             // console.log("item", item);
             const user = await User.findById(item._doc.createdBy);
@@ -148,7 +149,9 @@ exports.getAllPosts = async function () {
                 owner: isUserOwner(user._id, item.createdBy)
             }
         }))
-        console.log("posts", posts);
+
+        posts = posts.filter((item) => !item.hide)
+
         return posts;
 
     } catch (e) {
@@ -226,11 +229,14 @@ exports.addSavedPost = async function (email, postId, saved) {
 
 exports.hidePost = async function (email, postId, hide) {
     const user = await User.findOne({ email: email });
+    // console.log("user", user)
     // console.log(user)
     const userId = user._id;
     const post = await Post.findById(postId);
+    // console.log("post", post)
     if (!post) return { statusCode: 400, response: { success: false, message: "Post does not exist" } };
-    if (userId !== post.createdBy) return { statusCode: 400, response: { success: false, message: "Post is not created by user" } };
+
+    if (!isUserOwner(userId, post.createdBy)) return { statusCode: 400, response: { success: false, message: "Post is not created by user" } };
 
     // const len = savedPosts.indexOf(postId);
     post.hide = hide;

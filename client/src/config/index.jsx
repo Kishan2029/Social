@@ -15,6 +15,7 @@ import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 
 export const config = {
   navBar: [
@@ -65,6 +66,11 @@ export const config = {
       name: "hidePost",
       title: "Hide post",
       icon: <ClearIcon />,
+    },
+    {
+      name: "seePost",
+      title: "See post",
+      icon: <RemoveRedEyeIcon />,
     },
     {
       name: "delete",

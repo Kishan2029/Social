@@ -16,7 +16,17 @@ import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import ShareIcon from "@mui/icons-material/Share";
 import PostOptions from "./PostOptions";
 
-const Post = ({ content, name, imageData, time, postId, saved, owner }) => {
+const Post = ({
+  content,
+  name,
+  imageData,
+  time,
+  postId,
+  saved,
+  owner,
+  hide,
+  pageName,
+}) => {
   const [option, setOption] = useState(false);
   // no of colums
   // const col = imageData.length > 1 ? 2 : 1;
@@ -53,6 +63,8 @@ const Post = ({ content, name, imageData, time, postId, saved, owner }) => {
             postId={postId}
             saved={saved}
             owner={owner}
+            hide={hide}
+            pageName={pageName}
             setOption={setOption}
           />
         </Box>
