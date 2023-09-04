@@ -25,8 +25,17 @@ const PostOptions = ({ postId, saved, owner, hide, pageName, setOption }) => {
 
   const hideMutation = useMutation({
     mutationFn: (body) => hidePost(body),
-    onSuccess: async () => {
-      await queryClient.invalidateQueries(["posts", "userPosts"]);
+    onSuccess: async (queryKey, body) => {
+      queryClient.setQueriesData(["posts"], (oldData) => {
+        console.log("pageName", pageName);
+        if (body.hide) {
+          const newData = oldData.filter((item) => item._id !== body.postId);
+          return newData;
+        } else {
+          return oldData;
+        }
+      });
+      queryClient.invalidateQueries(["posts", "userPosts"]);
     },
   });
 

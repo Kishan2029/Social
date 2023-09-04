@@ -69,7 +69,7 @@ export const config = {
     },
     {
       name: "seePost",
-      title: "See post",
+      title: "Visible post",
       icon: <RemoveRedEyeIcon />,
     },
     {

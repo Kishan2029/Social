@@ -55,7 +55,7 @@ const Post = ({
             position: "absolute",
             top: 60,
             right: -14,
-            // width: "60%",
+            width: "31%",
             zIndex: 200,
           }}
         >

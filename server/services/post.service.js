@@ -151,7 +151,7 @@ exports.getAllPosts = async function () {
         }))
 
         posts = posts.filter((item) => !item.hide)
-
+        console.log("allPosts", posts);
         return posts;
 
     } catch (e) {
