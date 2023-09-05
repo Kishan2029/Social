@@ -1,10 +1,12 @@
 var User = require('../models/user.model')
 const Post = require('../models/post.model')
+const fs = require('fs')
+const path = require('path')
 
 exports.getUserInfo = async function (email) {
 
     try {
-        const userInfo = await User.find({ email: email }).select({ description: 1, location: 1, _id: 0 })
+        const userInfo = await User.find({ email: email }).select({ description: 1, location: 1, name: 1, profileImage: 1, coverImage: 1, _id: 0 })
         console.log("user", userInfo);
         return { statusCode: 200, response: { success: true, data: userInfo[0] } };
 
@@ -88,7 +90,7 @@ exports.getPhotos = async function (email) {
     }
 }
 
-exports.editProfileText = async function (email, location, name) {
+exports.updateProfileText = async function (email, location, name) {
 
     try {
         const user = await User.findOne({ email: email });
@@ -104,7 +106,7 @@ exports.editProfileText = async function (email, location, name) {
     }
 }
 
-exports.editProfileImage = async function (email, imageType, file) {
+exports.updateProfileImage = async function (email, imageType, file) {
 
     try {
         const user = await User.findOne({ email: email });

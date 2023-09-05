@@ -17,6 +17,7 @@ import { useSelector } from "react-redux";
 const Profile = () => {
   const auth = useSelector((state) => state.auth.user);
   const [value, setValue] = useState("2");
+
   // fetch user posts
   async function fetchUserInfo(email) {
     const { data } = await axios.get(config.urls.user.getUserInfo(email), {
@@ -26,6 +27,7 @@ const Profile = () => {
     });
 
     // dispatch(setLoader(false));
+    console.log("userInfo", data.data.coverImage);
     return data.data;
   }
 
@@ -40,7 +42,14 @@ const Profile = () => {
   return (
     <TabContext value={value}>
       <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
-        <MyProfile value={value} setValue={setValue} location={data.location} />
+        <MyProfile
+          value={value}
+          setValue={setValue}
+          userLocation={data.location}
+          userName={data.name}
+          userCoverImage={data?.coverImage}
+          userProfileImage={data?.profileImage}
+        />
         <TabPanel value="1" sx={{ padding: 0 }}>
           <UserPosts />
         </TabPanel>

@@ -150,6 +150,12 @@ export const config = {
       getPhotos: (email) => {
         return `${import.meta.env.VITE_BACKEND_URL}/user/getPhotos/${email}`;
       },
+      updateProfileText: () => {
+        return `${import.meta.env.VITE_BACKEND_URL}/user/profile/updateText`;
+      },
+      updateProfileImage: () => {
+        return `${import.meta.env.VITE_BACKEND_URL}/user/profile/updateImage`;
+      },
     },
   },
 };

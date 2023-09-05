@@ -25,30 +25,91 @@ import EditImage from "../assets/image/edit.png";
 import { stringToColor } from "../util/helper";
 import cover from "../assets/image/coverImage.jpeg";
 import cover1 from "../assets/image/cover1.jpeg";
+import { useSelector } from "react-redux";
+import { useMutation, useQueryClient } from "react-query";
+import { updateProfileImage, updateProfileText } from "../reactQuery/mutation";
 
-const MyProfile = ({ value, setValue }) => {
-  //   const [value, setValue] = useState(0);
+const MyProfile = ({
+  value,
+  setValue,
+  userLocation,
+  userName,
+  userCoverImage = false,
+  userProfileImage,
+}) => {
+  const auth = useSelector((state) => state.auth.user);
+  const queryClient = useQueryClient();
+
+  // conditoinal variables
   const [editProfile, setEditProfile] = useState(false);
-  const [editCover, setEditCover] = useState(false);
+  const [editCoverImage, setEditCoverImage] = useState(false);
   const [editProfileImage, setEditProfileImage] = useState(false);
-  const [name, setName] = useState("Kevin");
-  const [location, setLocation] = useState("Pune, India");
-  const [coverImage, setCoverImage] = useState("");
+
+  // data fields
+  const [name, setName] = useState(userName);
+  const [location, setLocation] = useState(userLocation);
+  const [coverImage, setCoverImage] = useState(userCoverImage);
   const [profileImage, setProfileImage] = useState("");
 
+  const [oldName, setOldName] = useState(userName);
+  const [oldLocation, setOldLocation] = useState(userLocation);
+  const [oldCoverImage, setOldCoverImage] = useState(userCoverImage);
+
+  console.log("cover", userCoverImage);
+
+  // mutations
+  const saveProfileMutation = useMutation({
+    mutationFn: (body) => updateProfileText(body),
+    onSuccess: async () => {
+      // await queryClient.invalidateQueries(["savedPosts"]);
+    },
+  });
+
+  const saveProfileImageMutatin = useMutation({
+    mutationFn: (body) => updateProfileImage(body),
+    onSuccess: async () => {
+      // await queryClient.invalidateQueries(["savedPosts"]);
+    },
+  });
+
   const saveProfile = () => {
-    console.log("name", name);
-    console.log("location", location);
+    saveProfileMutation.mutate({ name, email: auth.email, location });
+    setEditProfile(false);
+    setOldLocation(location);
+    setOldName(name);
   };
 
   const saveCoverImage = () => {
+    let formData = new FormData();
+
+    formData.append("images", coverImage);
+    formData.append("email", auth.email);
+    formData.append("imageType", "cover");
+
+    saveProfileImageMutatin.mutate(formData);
+
+    setOldCoverImage(coverImage);
     console.log("cover", coverImage);
-    setEditCover(false);
+    setEditCoverImage(false);
   };
 
   const tabChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  const generateImageUrl = (item) => {
+    const blob = new Blob([Int8Array.from(item.data.data)], {
+      type: item.contentType,
+    });
+
+    const image = window.URL.createObjectURL(blob);
+    return image;
+  };
+
+  // When cover image change
+  useEffect(() => {
+    console.log("cover", coverImage);
+  }, [coverImage]);
 
   useEffect(() => {
     if (profileImage !== "") {
@@ -62,13 +123,20 @@ const MyProfile = ({ value, setValue }) => {
       {/* Cover Image */}
       <Box sx={{ height: "50%", position: "relative" }}>
         <img
-          src={coverImage ? sky : cover1}
+          src={
+            coverImage
+              ? coverImage.data !== undefined
+                ? generateImageUrl(coverImage)
+                : URL.createObjectURL(coverImage)
+              : cover1
+          }
+          // src={cover1}
           height="100%"
           width="100%"
           style={{ objectFit: "cover" }}
         />
 
-        {editCover ? (
+        {editCoverImage ? (
           <Box sx={{ position: "absolute", right: 10, bottom: 10 }}>
             <Box sx={{ alignSelf: "flex-start" }}>
               <Box
@@ -116,8 +184,8 @@ const MyProfile = ({ value, setValue }) => {
                     },
                   }}
                   onClick={() => {
-                    setCoverImage("");
-                    setEditCover(false);
+                    setCoverImage(oldCoverImage);
+                    setEditCoverImage(false);
                   }}
                 >
                   Cancel
@@ -145,13 +213,15 @@ const MyProfile = ({ value, setValue }) => {
                   backgroundColor: "white",
                 },
               }}
-              startIcon={<CameraAltIcon sx={{ color: "var(--grayTitle)" }} />}
             >
               <label
                 htmlFor="cover-image"
                 style={{ display: "flex", alignItems: "center" }}
               >
-                Change Cover Image
+                <Box sx={{ display: "flex", gap: 1 }}>
+                  <CameraAltIcon sx={{ color: "var(--grayTitle)" }} />
+                  Change Cover Image
+                </Box>
               </label>
             </Button>
             <input
@@ -164,7 +234,7 @@ const MyProfile = ({ value, setValue }) => {
               // value={image}
               onChange={(event) => {
                 setCoverImage(event.target.files[0]);
-                setEditCover(true);
+                setEditCoverImage(true);
               }}
             />
           </>
@@ -332,7 +402,8 @@ const MyProfile = ({ value, setValue }) => {
                   },
                 }}
                 onClick={() => {
-                  console.log("hello");
+                  setName(oldName);
+                  setLocation(oldLocation);
                   setEditProfile(false);
                 }}
               >

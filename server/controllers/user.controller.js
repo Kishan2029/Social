@@ -43,10 +43,10 @@ exports.getPhotos = async function (req, res, next) {
     }
 }
 
-exports.editProfileText = async function (req, res, next) {
+exports.updateProfileText = async function (req, res, next) {
     const { email, location, name } = req.body;
     try {
-        const { statusCode, response } = await UserService.editProfileText(email, location, name);
+        const { statusCode, response } = await UserService.updateProfileText(email, location, name);
         res.status(statusCode).send(response);
     }
     catch (error) {
@@ -54,10 +54,10 @@ exports.editProfileText = async function (req, res, next) {
     }
 }
 
-exports.editProfileImage = async function (req, res, next) {
+exports.updateProfileImage = async function (req, res, next) {
     const { imageType, email } = req.body;
     try {
-        const { statusCode, response } = await UserService.editProfileImage(email, imageType, req.files);
+        const { statusCode, response } = await UserService.updateProfileImage(email, imageType, req.files);
         res.status(statusCode).send(response);
     }
     catch (error) {
