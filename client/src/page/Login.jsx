@@ -38,6 +38,7 @@ const Login = () => {
         const body = {
           name: user.displayName,
           email: user.email,
+          // description: "Hello",
         };
 
         // store access token in local storage

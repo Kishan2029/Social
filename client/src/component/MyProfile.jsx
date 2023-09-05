@@ -22,7 +22,7 @@ import PhotoSizeSelectActualIcon from "@mui/icons-material/PhotoSizeSelectActual
 import FriendsPic from "../assets/image/friends.png";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import EditImage from "../assets/image/edit.png";
-import { stringToColor } from "../util/helper";
+import { generateImageUrl, stringToColor } from "../util/helper";
 import cover from "../assets/image/coverImage.jpeg";
 import cover1 from "../assets/image/cover1.jpeg";
 import { useSelector } from "react-redux";
@@ -49,13 +49,11 @@ const MyProfile = ({
   const [name, setName] = useState(userName);
   const [location, setLocation] = useState(userLocation);
   const [coverImage, setCoverImage] = useState(userCoverImage);
-  const [profileImage, setProfileImage] = useState("");
+  const [profileImage, setProfileImage] = useState(userProfileImage);
 
   const [oldName, setOldName] = useState(userName);
   const [oldLocation, setOldLocation] = useState(userLocation);
   const [oldCoverImage, setOldCoverImage] = useState(userCoverImage);
-
-  console.log("cover", userCoverImage);
 
   // mutations
   const saveProfileMutation = useMutation({
@@ -89,7 +87,7 @@ const MyProfile = ({
     saveProfileImageMutatin.mutate(formData);
 
     setOldCoverImage(coverImage);
-    console.log("cover", coverImage);
+
     setEditCoverImage(false);
   };
 
@@ -97,23 +95,15 @@ const MyProfile = ({
     setValue(newValue);
   };
 
-  const generateImageUrl = (item) => {
-    const blob = new Blob([Int8Array.from(item.data.data)], {
-      type: item.contentType,
-    });
-
-    const image = window.URL.createObjectURL(blob);
-    return image;
-  };
-
-  // When cover image change
   useEffect(() => {
-    console.log("cover", coverImage);
-  }, [coverImage]);
+    if (profileImage !== undefined) {
+      let formData = new FormData();
 
-  useEffect(() => {
-    if (profileImage !== "") {
-      console.log("profile", profileImage);
+      formData.append("images", profileImage);
+      formData.append("email", auth.email);
+      formData.append("imageType", "profile");
+
+      saveProfileImageMutatin.mutate(formData);
     }
   }, [profileImage]);
   return (
@@ -252,7 +242,11 @@ const MyProfile = ({
       >
         {profileImage !== undefined ? (
           <Avatar
-            src={avatar}
+            src={
+              profileImage.data !== undefined
+                ? generateImageUrl(profileImage)
+                : URL.createObjectURL(profileImage)
+            }
             sx={{
               height: "9rem",
               width: "9rem",

@@ -29,3 +29,12 @@ export const stringToColor = (string) => {
 
     return color;
 }
+
+export const generateImageUrl = (item) => {
+    const blob = new Blob([Int8Array.from(item.data.data)], {
+        type: item.contentType,
+    });
+
+    const image = window.URL.createObjectURL(blob);
+    return image;
+};

@@ -27,7 +27,7 @@ const Profile = () => {
     });
 
     // dispatch(setLoader(false));
-    console.log("userInfo", data.data.coverImage);
+
     return data.data;
   }
 

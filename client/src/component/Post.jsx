@@ -15,6 +15,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import ShareIcon from "@mui/icons-material/Share";
 import PostOptions from "./PostOptions";
+import { generateImageUrl } from "../util/helper";
 
 const Post = ({
   content,
@@ -125,15 +126,10 @@ const Post = ({
         {imageData.length > 0 && (
           <ImageList sx={{ height: 400 }} cols={2} rowHeight={300}>
             {imageData.map((item) => {
-              const blob = new Blob([Int8Array.from(item.data.data)], {
-                type: item.contentType,
-              });
-
-              const image = window.URL.createObjectURL(blob);
               return (
                 <ImageListItem key={item._id}>
                   <img
-                    src={image}
+                    src={generateImageUrl(item)}
                     loading="lazy"
                     style={{ borderRadius: "0.4rem" }}
                   />

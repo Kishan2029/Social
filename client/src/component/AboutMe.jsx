@@ -9,16 +9,24 @@ const AboutMe = ({ description }) => {
         About me
       </Typography>
 
-      {stringSplit(description).map((item, index) => {
-        return (
-          <Typography
-            key={index}
-            sx={{ fontSize: "0.9rem", color: "var(--grayTitle)", mb: "0.5rem" }}
-          >
-            {item}
-          </Typography>
-        );
-      })}
+      {description ? (
+        stringSplit(description).map((item, index) => {
+          return (
+            <Typography
+              key={index}
+              sx={{
+                fontSize: "0.9rem",
+                color: "var(--grayTitle)",
+                mb: "0.5rem",
+              }}
+            >
+              {item}
+            </Typography>
+          );
+        })
+      ) : (
+        <Typography>Please edit the description</Typography>
+      )}
     </Card>
   );
 };

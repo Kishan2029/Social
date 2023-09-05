@@ -40,7 +40,7 @@ app.get('/', (req, res) => {
 
 app.use(logger);
 
-// app.use(checkAuth);
+app.use(checkAuth);
 
 route(app);
 
