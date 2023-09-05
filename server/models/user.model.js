@@ -19,7 +19,7 @@ const UserSchema = new mongoose.Schema({
         data: Buffer,
         contentType: String
     },
-    backgroundImage: {
+    profileImage: {
         data: Buffer,
         contentType: String
     },

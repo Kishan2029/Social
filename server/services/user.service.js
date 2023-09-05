@@ -88,3 +88,51 @@ exports.getPhotos = async function (email) {
     }
 }
 
+exports.editProfileText = async function (email, location, name) {
+
+    try {
+        const user = await User.findOne({ email: email });
+        if (!user) return { statusCode: 400, response: { success: false, message: "User does not exist" } };
+
+        user.location = location;
+        user.name = name;
+        await user.save();
+        return { statusCode: 200, response: { success: true, message: "Profile is updated" } };
+    } catch (e) {
+        // Log Errors
+        console.log("error", e)
+    }
+}
+
+exports.editProfileImage = async function (email, imageType, file) {
+
+    try {
+        const user = await User.findOne({ email: email });
+        if (!user) return { statusCode: 400, response: { success: false, message: "User does not exist" } };
+
+        if (imageType === "cover") {
+            user.coverImage = {
+                data: fs.readFileSync(path.join('./uploads/' + file[0].filename)),
+                contentType: file[0].mimetype
+            }
+        }
+        else if (imageType === "profile") {
+            user.profileImage = {
+                data: fs.readFileSync(path.join('./uploads/' + file[0].filename)),
+                contentType: file[0].mimetype
+            }
+        }
+        await user.save();
+        // const images = file.map((item) => {
+        //     return {
+        //         data: fs.readFileSync(path.join('./uploads/' + item.filename)),
+        //         contentType: item.mimetype
+        //     }
+        // })
+
+        return { statusCode: 200, response: { success: true, message: "Profile is updated" } };
+    } catch (e) {
+        // Log Errors
+        console.log("error", e)
+    }
+}
