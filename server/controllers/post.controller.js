@@ -47,8 +47,9 @@ exports.getSavedPosts = async function (req, res, next) {
 }
 
 exports.getAllPosts = async function (req, res, next) {
+    const { email } = req.body;
     try {
-        const response = await PostService.getAllPosts();
+        const response = await PostService.getAllPosts(email);
         res.status(200).send(response);
     }
     catch (error) {

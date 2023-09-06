@@ -4,7 +4,6 @@ import axios from "axios";
 
 // Post 
 export const deletePost = async (body) => {
-    console.log("inside delete post");
     const { data } = await axios.post(config.urls.post.deletePost(), body, {
         headers: {
             Authorization: "Bearer " + getAccessToken(),

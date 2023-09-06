@@ -28,13 +28,12 @@ const postCreationTime = (date) => {
 }
 
 const isUserOwner = (userId, postId) => {
-
     return String(userId) === String(postId);
 }
 
 exports.createPost = async function (body, file) {
     const { email, content } = body;
-    console.log("image", file);
+
     try {
         const user = await User.findOne({ email: email });
         const images = file.map((item) => {
@@ -65,8 +64,7 @@ exports.deletePost = async function (email, postId) {
     const post = await Post.findById(postId);
 
     if (!post) return { statusCode: 400, response: { success: false, message: "Post does not exist" } };
-    console.log("user", userId)
-    console.log("post", post.createdBy)
+
     if (String(userId) !== String(post.createdBy)) return { statusCode: 400, response: { success: false, message: "Post is not created by user" } };
 
     // const len = savedPosts.indexOf(postId);
@@ -103,7 +101,7 @@ exports.getSavedPosts = async function (email) {
 
     try {
         const user = await User.findOne({ email: email });
-        console.log(user.savedPosts)
+
         let savedPosts = await Promise.all(user.savedPosts.map(async (postId) => {
             let post = await Post.findById(postId);
             // console.log(post)
@@ -121,7 +119,7 @@ exports.getSavedPosts = async function (email) {
 
         }))
         savedPosts = savedPosts.filter((item) => item)
-        console.log("savedPost", savedPosts)
+
         return { statusCode: 200, response: { success: true, data: savedPosts } };
 
 
@@ -131,16 +129,14 @@ exports.getSavedPosts = async function (email) {
     }
 }
 
-exports.getAllPosts = async function () {
+exports.getAllPosts = async function (email) {
 
     try {
-        // const user = await User.findOne({ email: email });
+        const user = await User.findOne({ email: email });
         // // console.log("user",user)
         var posts = await Post.find().sort({ createdAt: -1 })
         posts = await Promise.all(posts.map(async (item) => {
-            // console.log("item", item);
-            const user = await User.findById(item._doc.createdBy);
-            // console.log("user", user);
+
             return {
                 ...item._doc,
                 name: user.name,
@@ -151,7 +147,7 @@ exports.getAllPosts = async function () {
         }))
 
         posts = posts.filter((item) => !item.hide)
-        console.log("allPosts", posts);
+
         return posts;
 
     } catch (e) {
@@ -198,7 +194,7 @@ exports.likePost = async function (email, postId, like) {
 exports.addSavedPost = async function (email, postId, saved) {
     const user = await User.findOne({ email: email });
     const savedPosts = user.savedPosts;
-    console.log("savedPost", savedPosts)
+
     const post = await Post.findById(postId);
     if (!post) return { statusCode: 400, response: { success: false, message: "Post does not exist" } };
 

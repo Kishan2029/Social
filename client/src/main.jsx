@@ -10,6 +10,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 
 const queryClient = new QueryClient();
+// { staleTime: 1000 * 60 }
 ReactDOM.createRoot(document.getElementById("root")).render(
   // <React.StrictMode>
   <Provider store={store}>

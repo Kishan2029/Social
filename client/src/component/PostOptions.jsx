@@ -5,21 +5,95 @@ import { useMutation, useQueryClient } from "react-query";
 import { savePost, deletePost, hidePost } from "../reactQuery/mutation";
 import { useSelector } from "react-redux";
 
-const PostOptions = ({ postId, saved, owner, hide, pageName, setOption }) => {
+const PostOptions = ({
+  postId,
+  saved,
+  owner,
+  hide,
+  pageName,
+  setOption,
+  otherData,
+}) => {
   const auth = useSelector((state) => state.auth.user);
   const queryClient = useQueryClient();
+
   // mutations
   const savePostMutation = useMutation({
     mutationFn: (body) => savePost(body),
-    onSuccess: async () => {
-      await queryClient.invalidateQueries(["savedPosts"]);
+    onSuccess: async (queryKey, body) => {
+      // set data
+      queryClient.setQueriesData(["posts"], (oldData) => {
+        const newData = oldData.map((item) => {
+          if (item._id === body.postId) {
+            return {
+              ...item,
+              saved: body.saved,
+            };
+          } else {
+            return item;
+          }
+        });
+        return newData;
+      });
+      queryClient.setQueriesData(["userPosts"], (oldData) => {
+        const newData = oldData.map((item) => {
+          if (item._id === body.postId) {
+            return {
+              ...item,
+              saved: body.saved,
+            };
+          } else {
+            return item;
+          }
+        });
+        return newData;
+      });
+      queryClient.setQueriesData(["savedPosts"], (oldData) => {
+        if (body.saved) {
+          const newData = [
+            ...oldData,
+            {
+              _id: body.postId,
+              postId: body.postId,
+              name: body.other.name,
+              postTime: body.other.time,
+              content: body.other.content,
+              images: body.other.imageData,
+              saved: true,
+              owner: body.other.owner,
+              hide: body.other.hide,
+              pageName: "savePost",
+            },
+          ];
+
+          return newData;
+        } else {
+          const newData = oldData.filter((item) => item._id !== body.postId);
+          // console.log("newData", newData);
+          return newData;
+        }
+      });
+      // queryClient.invalidateQueries(["savedPosts", "posts", "userPosts"]);
     },
   });
 
   const deleteMutation = useMutation({
     mutationFn: (body) => deletePost(body),
-    onSuccess: async () => {
-      await queryClient.invalidateQueries(["posts", "userPhotos", "userPosts"]);
+    onSuccess: async (queryKey, body) => {
+      console.log("body", body);
+      console.log("delete Success");
+      // set data
+      queryClient.setQueriesData(["posts"], (oldData) => {
+        const newData = oldData.filter((item) => item._id !== body.postId);
+        return newData;
+      });
+
+      queryClient.setQueriesData(["userPosts"], (oldData) => {
+        const newData = oldData.filter((item) => item._id !== body.postId);
+        return newData;
+      });
+
+      // await queryClient.invalidateQueries(["posts", "userPhotos", "userPosts"]);
     },
   });
 
@@ -27,15 +101,45 @@ const PostOptions = ({ postId, saved, owner, hide, pageName, setOption }) => {
     mutationFn: (body) => hidePost(body),
     onSuccess: async (queryKey, body) => {
       queryClient.setQueriesData(["posts"], (oldData) => {
-        console.log("pageName", pageName);
         if (body.hide) {
           const newData = oldData.filter((item) => item._id !== body.postId);
           return newData;
         } else {
-          return oldData;
+          console.log("hide success");
+          const newData = [
+            ...oldData,
+            {
+              _id: body.postId,
+              postId: body.postId,
+              name: body.other.name,
+              postTime: body.other.time,
+              content: body.other.content,
+              images: body.other.imageData,
+              saved: body.other.saved,
+              owner: body.other.owner,
+              hide: false,
+              pageName: "savePost",
+            },
+          ];
+          return newData;
         }
       });
-      queryClient.invalidateQueries(["posts", "userPosts"]);
+      queryClient.setQueriesData(["userPosts"], (oldData) => {
+        const newData = oldData.map((item) => {
+          if (item._id === body.postId) {
+            return {
+              ...item,
+              hide: body.hide,
+            };
+          } else {
+            return item;
+          }
+        });
+
+        return newData;
+      });
+
+      // queryClient.invalidateQueries(["posts", "userPosts"]);
     },
   });
 
@@ -112,6 +216,7 @@ const PostOptions = ({ postId, saved, owner, hide, pageName, setOption }) => {
                     email: auth.email,
                     postId: postId,
                     saved: saved ? false : true,
+                    other: otherData,
                   });
                 } else if (
                   item.name === "hidePost" ||
@@ -121,9 +226,9 @@ const PostOptions = ({ postId, saved, owner, hide, pageName, setOption }) => {
                     email: auth.email,
                     postId: postId,
                     hide: hide ? false : true,
+                    other: otherData,
                   });
                 } else if (item.name === "delete") {
-                  console.log("delete");
                   deleteMutation.mutate({
                     email: auth.email,
                     postId: postId,

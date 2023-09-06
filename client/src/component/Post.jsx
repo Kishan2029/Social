@@ -48,6 +48,7 @@ const Post = ({
       ></Box>
     );
   }
+
   return (
     <Box sx={{ position: "relative" }}>
       {option && (
@@ -67,6 +68,17 @@ const Post = ({
             hide={hide}
             pageName={pageName}
             setOption={setOption}
+            otherData={{
+              content,
+              name,
+              imageData,
+              time,
+              postId,
+              saved,
+              owner,
+              hide,
+              pageName,
+            }}
           />
         </Box>
       )}

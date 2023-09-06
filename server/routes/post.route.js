@@ -7,7 +7,7 @@ const PostController = require("../controllers/post.controller");
 router.post('/createPost', imageUpload, PostController.createPost)
 router.post('/deletePost', PostController.deletePost)
 router.post('/getUserPosts', PostController.getUserPosts)
-router.get('/getAllPosts', PostController.getAllPosts)
+router.post('/getAllPosts', PostController.getAllPosts)
 router.post('/likePost', PostController.likePost)
 router.post('/getSavedPosts', PostController.getSavedPosts)
 router.post('/savePost', PostController.addSavedPost)

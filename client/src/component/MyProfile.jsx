@@ -95,17 +95,18 @@ const MyProfile = ({
     setValue(newValue);
   };
 
-  useEffect(() => {
-    if (profileImage !== undefined) {
-      let formData = new FormData();
+  // useEffect(() => {
+  //   if (profileImage !== undefined) {
+  //     console.log("profileImage",profileImage)
+  //     let formData = new FormData();
 
-      formData.append("images", profileImage);
-      formData.append("email", auth.email);
-      formData.append("imageType", "profile");
+  //     formData.append("images", profileImage);
+  //     formData.append("email", auth.email);
+  //     formData.append("imageType", "profile");
 
-      saveProfileImageMutatin.mutate(formData);
-    }
-  }, [profileImage]);
+  //     saveProfileImageMutatin.mutate(formData);
+  //   }
+  // }, [profileImage]);
   return (
     <Card
       sx={{ height: editProfile ? "48.3vh" : "40vh", position: "relative" }}

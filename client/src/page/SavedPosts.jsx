@@ -18,6 +18,8 @@ const SavedPosts = () => {
     return <Loading />;
   }
 
+  console.log("savedPostData", data);
+
   return (
     <Box>
       <Typography
