@@ -9,7 +9,12 @@ const CommentSchema = new mongoose.Schema({
         type: mongoose.Schema.ObjectId,
         ref: 'post',
         required: true,
-    }
+    },
+    createdBy: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'user',
+        required: true,
+    },
 },
     { timestamps: true }
 );

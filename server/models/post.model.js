@@ -18,9 +18,9 @@ const PostSchema = new mongoose.Schema({
         type: mongoose.Schema.ObjectId,
         ref: 'user',
     }],
-    comments: {
-        type: String,
-    },
+    // comments: {
+    //     type: String,
+    // },
     hide: {
         type: Boolean,
         default: false

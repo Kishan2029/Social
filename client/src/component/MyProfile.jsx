@@ -97,7 +97,7 @@ const MyProfile = ({
 
   // useEffect(() => {
   //   if (profileImage !== undefined) {
-  //     console.log("profileImage",profileImage)
+  //     console.log("profileImage", profileImage);
   //     let formData = new FormData();
 
   //     formData.append("images", profileImage);

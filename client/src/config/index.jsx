@@ -139,6 +139,9 @@ export const config = {
       savePost: () => {
         return `${import.meta.env.VITE_BACKEND_URL}/post/savePost`;
       },
+      likePost: () => {
+        return `${import.meta.env.VITE_BACKEND_URL}/post/likePost`;
+      },
     },
     user: {
       getUserInfo: (email) => {

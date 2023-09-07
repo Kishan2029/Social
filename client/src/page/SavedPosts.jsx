@@ -41,6 +41,8 @@ const SavedPosts = () => {
               saved={post.saved}
               owner={post.owner}
               hide={post.hide}
+              likeBoolean={post.like}
+              likeCount={post.likeCount}
               pageName={"savePost"}
             />
           );

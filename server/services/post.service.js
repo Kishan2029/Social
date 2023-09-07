@@ -31,6 +31,10 @@ const isUserOwner = (userId, postId) => {
     return String(userId) === String(postId);
 }
 
+const hasUserLiked = (array, item) => {
+    return array.includes(item);
+}
+
 exports.createPost = async function (body, file) {
     const { email, content } = body;
 
@@ -86,7 +90,9 @@ exports.getUserPosts = async function (email) {
             name: user.name,
             postTime: postCreationTime(item._doc.createdAt),
             saved: user.savedPosts.includes(item._id) ? true : false,
-            owner: true
+            owner: true,
+            like: hasUserLiked(item.likes, user._id),
+            likeCount: item.likes.length
         }))
         console.log("posts", posts);
         return posts;
@@ -112,7 +118,9 @@ exports.getSavedPosts = async function (email) {
                         name: user.name,
                         postTime: postCreationTime(post.createdAt),
                         saved: true,
-                        owner: isUserOwner(user._id, post.createdBy)
+                        owner: isUserOwner(user._id, post.createdBy),
+                        like: hasUserLiked(post.likes, user._id),
+                        likeCount: post.likes.length
                     }
                 )
 
@@ -142,7 +150,9 @@ exports.getAllPosts = async function (email) {
                 name: user.name,
                 postTime: postCreationTime(item._doc.createdAt),
                 saved: user.savedPosts.includes(item._id) ? true : false,
-                owner: isUserOwner(user._id, item.createdBy)
+                owner: isUserOwner(user._id, item.createdBy),
+                like: hasUserLiked(item.likes, user._id),
+                likeCount: item.likes.length
             }
         }))
 
@@ -162,9 +172,9 @@ exports.likePost = async function (email, postId, like) {
     const post = await Post.findById(postId);
     if (!post) return { statusCode: 400, response: { success: false, message: "Post does not exist" } };
 
-    console.log("post", post.likes)
+    console.log("likes", post.likes)
     const len = post.likes.indexOf(user._id);
-    console.log(len)
+    console.log("len", len)
     if (like) {
         if (len < 0) {
             post.likes.unshift(user._id);

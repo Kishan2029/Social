@@ -40,7 +40,9 @@ const CreatePost = () => {
   const mutation = useMutation({
     mutationFn: (body) => createPostRequest(body),
     onSuccess: async () => {
-      await queryClient.invalidateQueries(["posts", "userPhotos", "userPosts"]);
+      queryClient.invalidateQueries(["posts"]);
+      queryClient.invalidateQueries(["userPost"]);
+      queryClient.invalidateQueries(["savedPosts"]);
     },
   });
 

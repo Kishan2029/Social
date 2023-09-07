@@ -28,7 +28,7 @@ const Home = () => {
     queryFn: () => fetchPosts({ email: auth.email }),
     queryKey: ["posts"],
   });
-
+  console.log("AllPosts", data);
   if (isLoading) {
     return <Loading />;
   }
@@ -48,6 +48,8 @@ const Home = () => {
             saved={post.saved}
             owner={post.owner}
             hide={post.hide}
+            likeBoolean={post.like}
+            likeCount={post.likeCount}
             pageName={"allPost"}
           />
         );

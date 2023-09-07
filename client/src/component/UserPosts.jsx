@@ -27,6 +27,7 @@ const UserPosts = () => {
     queryFn: () => fetchUserPosts({ email: auth.email }),
     queryKey: ["userPosts"],
   });
+  console.log("userPosts", data);
   // console.log("data", data);
   if (isLoading) {
     return <Loading />;
@@ -45,6 +46,8 @@ const UserPosts = () => {
             saved={post.saved}
             owner={post.owner}
             hide={post.hide}
+            likeBoolean={post.like}
+            likeCount={post.likeCount}
             pageName={"userPost"}
           />
         );

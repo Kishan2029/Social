@@ -12,10 +12,14 @@ import {
 import pic1 from "../assets/image/pic1.jpeg";
 import { config } from "../config";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import ShareIcon from "@mui/icons-material/Share";
 import PostOptions from "./PostOptions";
 import { generateImageUrl } from "../util/helper";
+import { likePost } from "../reactQuery/mutation";
+import { useMutation, useQueryClient } from "react-query";
+import { useSelector } from "react-redux";
 
 const Post = ({
   content,
@@ -27,11 +31,88 @@ const Post = ({
   owner,
   hide,
   pageName,
+  likeBoolean,
+  likeCount,
 }) => {
   const [option, setOption] = useState(false);
-  // no of colums
-  // const col = imageData.length > 1 ? 2 : 1;
-  // const row = imageData.length
+  const [like, setLike] = useState(likeBoolean);
+  const [count, setCount] = useState(likeCount);
+  const auth = useSelector((state) => state.auth.user);
+  const queryClient = useQueryClient();
+
+  const likeMutation = useMutation({
+    mutationFn: (body) => likePost(body),
+    onSuccess: async (queryKey, body) => {
+      console.log("success like");
+      // queryClient.setQueriesData(["posts"], (oldData) => {
+      //   const newData = oldData.map((item) => {
+      //     if (item._id === body.postId) {
+      //       return {
+      //         ...item,
+      //         like: body.like,
+      //         likeCount: body.like ? item.likeCount + 1 : item.likeCount - 1,
+      //       };
+      //     } else {
+      //       return item;
+      //     }
+      //   });
+      //   console.log("new", newData);
+      //   return newData;
+      // });
+      // queryClient.setQueriesData(["userPosts"], (oldData) => {
+      //   const newData = oldData.map((item) => {
+      //     if (item._id === body.postId) {
+      //       return {
+      //         ...item,
+      //         likeBoolean: body.like,
+      //         likeCount: body.like ? item.likeCount + 1 : item.likeCount - 1,
+      //       };
+      //     } else {
+      //       return item;
+      //     }
+      //   });
+      //   return newData;
+      // });
+      // queryClient.setQueriesData(["savedPosts"], (oldData) => {
+      //   const newData = oldData.map((item) => {
+      //     if (item._id === body.postId) {
+      //       return {
+      //         ...item,
+      //         likeBoolean: body.like,
+      //         likeCount: body.like ? item.likeCount + 1 : item.likeCount - 1,
+      //       };
+      //     } else {
+      //       return item;
+      //     }
+      //   });
+      //   return newData;
+      // });
+
+      await queryClient.invalidateQueries({
+        queryKey: ["userPosts"],
+        exact: true,
+        refetchType: "inactive",
+      });
+      // queryClient.invalidateQueries(["userPosts"]);
+      // queryClient.invalidateQueries(["savedPosts"]);
+      // queryClient.invalidateQueries({
+      //   queryKey: ["userPosts"],
+      //   refetchType: "all",
+      // });
+    },
+  });
+
+  const clickLike = (changeState) => {
+    likeMutation.mutate({
+      email: auth.email,
+      postId: postId,
+      like: changeState,
+    });
+    setLike(changeState);
+    changeState
+      ? setCount((count) => count + 1)
+      : setCount((count) => count - 1);
+  };
 
   // css
   const dots = [];
@@ -48,7 +129,6 @@ const Post = ({
       ></Box>
     );
   }
-
   return (
     <Box sx={{ position: "relative" }}>
       {option && (
@@ -151,11 +231,30 @@ const Post = ({
           </ImageList>
         )}
 
-        {/* Link, Comment, Share */}
+        {/* Like, Comment, Share */}
         <Box sx={{ display: "flex", gap: 5 }}>
-          <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-            <FavoriteBorderIcon />
-            <Typography>10</Typography>
+          <Box
+            sx={{
+              display: "flex",
+              gap: 1,
+              alignItems: "center",
+              cursor: "pointer",
+            }}
+          >
+            {like ? (
+              <>
+                <FavoriteIcon
+                  sx={{ color: "red", borderColor: "black" }}
+                  onClick={() => clickLike(false)}
+                />
+                <Typography>{count}</Typography>
+              </>
+            ) : (
+              <>
+                <FavoriteBorderIcon sx={{}} onClick={() => clickLike(true)} />
+                <Typography>{count}</Typography>
+              </>
+            )}
           </Box>
           <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
             <ChatBubbleOutlineIcon />

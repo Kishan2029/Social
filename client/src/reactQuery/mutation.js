@@ -32,6 +32,16 @@ export const savePost = async (body) => {
     return data.data;
 }
 
+export const likePost = async (body) => {
+    const { data } = await axios.post(config.urls.post.likePost(), body, {
+        headers: {
+            Authorization: "Bearer " + getAccessToken(),
+        },
+    });
+    console.log("like", data);
+    return data.data;
+}
+
 
 // User 
 export const updateProfileText = async (body) => {
@@ -45,7 +55,6 @@ export const updateProfileText = async (body) => {
 }
 
 export const updateProfileImage = async (body) => {
-    console.log("url", config.urls.user.updateProfileImage())
     const { data } = await axios.post(config.urls.user.updateProfileImage(), body, {
         headers: {
             Authorization: "Bearer " + getAccessToken(),
