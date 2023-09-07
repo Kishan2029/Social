@@ -48,6 +48,7 @@ const UserPosts = () => {
             hide={post.hide}
             likeBoolean={post.like}
             likeCount={post.likeCount}
+            commentMessageCount={post.commentCount}
             pageName={"userPost"}
           />
         );

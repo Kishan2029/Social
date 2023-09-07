@@ -4,7 +4,7 @@ const fs = require('fs')
 const path = require('path')
 
 
-const postCreationTime = (date) => {
+const postCreationTime = exports.postCreationTime = (date) => {
     const diff = new Date() - date;
     seconds_difference = diff / 1000;
     minutes_difference = seconds_difference / 60
@@ -231,7 +231,6 @@ exports.addSavedPost = async function (email, postId, saved) {
     }
 
 }
-
 
 exports.hidePost = async function (email, postId, hide) {
     const user = await User.findOne({ email: email });

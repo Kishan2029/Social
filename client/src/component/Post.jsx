@@ -17,9 +17,10 @@ import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import ShareIcon from "@mui/icons-material/Share";
 import PostOptions from "./PostOptions";
 import { generateImageUrl } from "../util/helper";
-import { likePost } from "../reactQuery/mutation";
+import { likePost, addComment } from "../reactQuery/mutation";
 import { useMutation, useQueryClient } from "react-query";
 import { useSelector } from "react-redux";
+import Comment from "./Comment";
 
 const Post = ({
   content,
@@ -33,13 +34,18 @@ const Post = ({
   pageName,
   likeBoolean,
   likeCount,
+  commentMessageCount = 0,
 }) => {
   const [option, setOption] = useState(false);
   const [like, setLike] = useState(likeBoolean);
   const [count, setCount] = useState(likeCount);
+  const [commentCount, setCommentCount] = useState(commentMessageCount);
+  const [openComment, setOpenComment] = useState(false);
+  const [commentMessage, setCommentMessage] = useState("");
   const auth = useSelector((state) => state.auth.user);
   const queryClient = useQueryClient();
 
+  // mutations
   const likeMutation = useMutation({
     mutationFn: (body) => likePost(body),
     onSuccess: async (queryKey, body) => {
@@ -102,6 +108,44 @@ const Post = ({
     },
   });
 
+  const commentMutation = useMutation({
+    mutationFn: (body) => addComment(body),
+    onMutate: async (body) => {
+      console.log(body);
+      console.log("onMutate");
+      setCommentCount((old) => Number(old) + 1);
+      queryClient.setQueriesData(["comments", postId], (oldData) => {
+        const newData = [
+          {
+            name: auth.name,
+            time: "few seconds ago",
+            message: body.message,
+          },
+          ...oldData,
+        ];
+
+        return newData;
+      });
+    },
+    onSuccess: async (queryKey, body) => {
+      // set data
+      console.log("comment success");
+      queryClient.invalidateQueries(["comments", postId]);
+      // queryClient.setQueriesData(["comments", postId], (oldData) => {
+      //   const newData = [
+      //     ...oldData,
+      //     {
+      //       name: auth.name,
+      //       time: "few seconds ago",
+      //       message: body.message,
+      //     },
+      //   ];
+
+      //   return newData;
+      // });
+    },
+  });
+
   const clickLike = (changeState) => {
     likeMutation.mutate({
       email: auth.email,
@@ -113,7 +157,7 @@ const Post = ({
       ? setCount((count) => count + 1)
       : setCount((count) => count - 1);
   };
-
+  // console.log("commentMessageCount", commentMessageCount);
   // css
   const dots = [];
   for (let i = 0; i < 3; i++) {
@@ -256,9 +300,12 @@ const Post = ({
               </>
             )}
           </Box>
+          {/* Comment */}
           <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-            <ChatBubbleOutlineIcon />
-            <Typography>10</Typography>
+            <ChatBubbleOutlineIcon
+              onClick={() => setOpenComment((old) => !old)}
+            />
+            <Typography>{commentCount}</Typography>
           </Box>
           <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
             <ShareIcon />
@@ -266,6 +313,7 @@ const Post = ({
           </Box>
         </Box>
 
+        {/* Comment text */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 2, mt: "2rem" }}>
           <Avatar sx={{ width: 45, height: 45 }} />
 
@@ -278,8 +326,30 @@ const Post = ({
                 borderRadius: "2rem",
               },
             }}
+            value={commentMessage}
+            onChange={(e) => setCommentMessage(e.target.value)}
+            onKeyPress={(ev) => {
+              if (ev.key === "Enter") {
+                ev.preventDefault();
+                // console.log("comment", commentMessage);
+                commentMutation.mutate({
+                  email: auth.email,
+                  postId,
+                  message: commentMessage,
+                });
+                setCommentMessage("");
+                setOpenComment(true);
+              }
+            }}
           />
         </Box>
+
+        {/* Comment List */}
+        {openComment && (
+          <Box sx={{ mt: "2rem" }}>
+            <Comment postId={postId} />
+          </Box>
+        )}
       </Card>
     </Box>
   );

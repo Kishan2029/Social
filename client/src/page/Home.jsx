@@ -50,6 +50,7 @@ const Home = () => {
             hide={post.hide}
             likeBoolean={post.like}
             likeCount={post.likeCount}
+            commentMessageCount={post.commentCount}
             pageName={"allPost"}
           />
         );

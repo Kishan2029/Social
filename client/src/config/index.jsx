@@ -160,5 +160,13 @@ export const config = {
         return `${import.meta.env.VITE_BACKEND_URL}/user/profile/updateImage`;
       },
     },
+    comment: {
+      addComment: () => {
+        return `${import.meta.env.VITE_BACKEND_URL}/comment/addComment`;
+      },
+      getComments: () => {
+        return `${import.meta.env.VITE_BACKEND_URL}/comment`;
+      },
+    },
   },
 };

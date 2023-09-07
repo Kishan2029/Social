@@ -65,4 +65,13 @@ export const updateProfileImage = async (body) => {
     return data.data;
 }
 
+// Comments
+export const addComment = async (body) => {
+    const { data } = await axios.post(config.urls.comment.addComment(), body, {
+        headers: {
+            Authorization: "Bearer " + getAccessToken(),
+        },
+    });
+    return data.data;
+}
 

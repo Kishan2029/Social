@@ -13,3 +13,12 @@ export const fetchSavedPosts = async (body) => {
     return data.data;
 }
 
+export const fetchComments = async (body) => {
+    const { data } = await axios.post(config.urls.comment.getComments(), body, {
+        headers: {
+            Authorization: "Bearer " + getAccessToken(),
+        },
+    });
+    return data.data;
+}
+
