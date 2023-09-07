@@ -4,6 +4,8 @@ const fs = require('fs')
 const path = require('path')
 
 
+
+
 const postCreationTime = exports.postCreationTime = (date) => {
     const diff = new Date() - date;
     seconds_difference = diff / 1000;
@@ -11,20 +13,23 @@ const postCreationTime = exports.postCreationTime = (date) => {
     hours_difference = minutes_difference / 60
     days_difference = hours_difference / 24
     weeks_difference = days_difference / 7
+    months_difference = days_difference / 30
     years_difference = days_difference / 365
 
     if (years_difference > 1)
-        return Math.floor(years_difference) + " years";
+        return Math.floor(years_difference) <= 1 ? Math.floor(years_difference) + " year" : Math.floor(years_difference) + " years";
+    else if (months_difference > 1)
+        return Math.floor(months_difference) <= 1 ? Math.floor(months_difference) + " month" : Math.floor(months_difference) + " months";
     else if (weeks_difference > 1)
-        return Math.floor(weeks_difference) + " weeks";
+        return Math.floor(weeks_difference) <= 1 ? Math.floor(weeks_difference) + " week" : Math.floor(weeks_difference) + " weeks";
     else if (days_difference > 1)
-        return Math.floor(days_difference) + " days";
+        return Math.floor(days_difference) <= 1 ? Math.floor(days_difference) + " day" : Math.floor(days_difference) + " days";
     else if (hours_difference > 1)
-        return Math.floor(hours_difference) + " hours";
+        return Math.floor(hours_difference) <= 1 ? Math.floor(hours_difference) + " hour" : Math.floor(hours_difference) + " hours";
     else if (minutes_difference > 1)
-        return Math.floor(minutes_difference) + " minutes";
+        return Math.floor(minutes_difference) <= 1 ? Math.floor(minutes_difference) + " minute" : Math.floor(minutes_difference) + " minutes";
     else
-        return Math.floor(seconds_difference) + " seconds";
+        return Math.floor(seconds_difference) <= 1 ? Math.floor(seconds_difference) + " second" : Math.floor(seconds_difference) + " seconds";
 }
 
 const isUserOwner = (userId, postId) => {
