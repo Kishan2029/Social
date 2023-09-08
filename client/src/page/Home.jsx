@@ -21,14 +21,14 @@ const Home = () => {
         Authorization: "Bearer " + getAccessToken(),
       },
     });
-    return data;
+    return data.data;
   }
 
   const { data, error, isError, isLoading } = useQuery({
     queryFn: () => fetchPosts({ email: auth.email }),
     queryKey: ["posts"],
   });
-  console.log("AllPosts", data);
+
   if (isLoading) {
     return <Loading />;
   }

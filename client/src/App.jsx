@@ -20,6 +20,13 @@ import { auth as firebaseAuth } from "./firebaseConfig";
 import Loading from "./component/Loading";
 import { setLoader } from "./store/slices/loaderSlice";
 import Profile from "./page/Profile";
+import {
+  axiosRequestInterceptor,
+  axiosResponseInterceptor,
+} from "./config/http";
+
+axiosRequestInterceptor();
+axiosResponseInterceptor();
 
 function App() {
   const auth = useSelector((state) => state.auth.user);

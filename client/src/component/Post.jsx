@@ -118,7 +118,7 @@ const Post = ({
         const newData = [
           {
             name: auth.name,
-            time: "few seconds ago",
+            time: "0 second ago",
             message: body.message,
           },
           ...oldData,

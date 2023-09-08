@@ -7,7 +7,17 @@ const NotificationSchema = new mongoose.Schema({
         default: 'like',
         required: true,
     },
-    user: {
+    actionPerformedUser: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'user',
+        required: true,
+    },
+    postId: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'post',
+        required: true
+    },
+    postOwnerUser: {
         type: mongoose.Schema.ObjectId,
         ref: 'user',
         required: true,

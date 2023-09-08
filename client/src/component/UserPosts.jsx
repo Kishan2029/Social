@@ -20,7 +20,7 @@ const UserPosts = () => {
     });
 
     // dispatch(setLoader(false));
-    return data;
+    return data.data;
   }
 
   const { data, error, isError, isLoading } = useQuery({

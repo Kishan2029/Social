@@ -7,31 +7,36 @@ const path = require('path')
 
 
 const postCreationTime = exports.postCreationTime = (date) => {
-    const diff = new Date() - date;
-    seconds_difference = diff / 1000;
-    minutes_difference = seconds_difference / 60
-    hours_difference = minutes_difference / 60
-    days_difference = hours_difference / 24
-    weeks_difference = days_difference / 7
-    months_difference = days_difference / 30
-    years_difference = days_difference / 365
+    const now = new Date();
+    const diff = now - date;
+    const secondsDifference = diff / 1000;
+    const minutesDifference = secondsDifference / 60;
+    const hoursDifference = minutesDifference / 60;
+    const daysDifference = hoursDifference / 24;
+    const weeksDifference = daysDifference / 7;
+    const monthsDifference = daysDifference / 30;
+    const yearsDifference = daysDifference / 365;
 
-    if (years_difference > 1)
-        return Math.floor(years_difference) <= 1 ? Math.floor(years_difference) + " year" : Math.floor(years_difference) + " years";
-    else if (months_difference > 1)
-        return Math.floor(months_difference) <= 1 ? Math.floor(months_difference) + " month" : Math.floor(months_difference) + " months";
-    else if (weeks_difference > 1)
-        return Math.floor(weeks_difference) <= 1 ? Math.floor(weeks_difference) + " week" : Math.floor(weeks_difference) + " weeks";
-    else if (days_difference > 1)
-        return Math.floor(days_difference) <= 1 ? Math.floor(days_difference) + " day" : Math.floor(days_difference) + " days";
-    else if (hours_difference > 1)
-        return Math.floor(hours_difference) <= 1 ? Math.floor(hours_difference) + " hour" : Math.floor(hours_difference) + " hours";
-    else if (minutes_difference > 1)
-        return Math.floor(minutes_difference) <= 1 ? Math.floor(minutes_difference) + " minute" : Math.floor(minutes_difference) + " minutes";
+    const formatTimeUnit = (value, unit) => {
+        const roundedValue = Math.floor(value);
+        return roundedValue <= 1 ? `${roundedValue} ${unit}` : `${roundedValue} ${unit}s`;
+    }
+
+    if (yearsDifference > 1)
+        return formatTimeUnit(yearsDifference, 'year');
+    else if (monthsDifference > 1)
+        return formatTimeUnit(monthsDifference, 'month');
+    else if (weeksDifference > 1)
+        return formatTimeUnit(weeksDifference, 'week');
+    else if (daysDifference > 1)
+        return formatTimeUnit(daysDifference, 'day');
+    else if (hoursDifference > 1)
+        return formatTimeUnit(hoursDifference, 'hour');
+    else if (minutesDifference > 1)
+        return formatTimeUnit(minutesDifference, 'minute');
     else
-        return Math.floor(seconds_difference) <= 1 ? Math.floor(seconds_difference) + " second" : Math.floor(seconds_difference) + " seconds";
+        return formatTimeUnit(secondsDifference, 'second');
 }
-
 const isUserOwner = (userId, postId) => {
     return String(userId) === String(postId);
 }
@@ -59,7 +64,16 @@ exports.createPost = async function (body, file) {
 
         const newPost = new Post(post)
         await newPost.save();
-        return "New post is created";
+        return {
+            statusCode: 200, response: {
+                success: true, message: "New post is created",
+                notification: {
+                    value: true,
+                    message: "New post is created"
+                }
+            }
+        };
+
     } catch (e) {
         // Log Errors
         console.log("error", e)
@@ -72,15 +86,36 @@ exports.deletePost = async function (email, postId) {
     const userId = user._id;
     const post = await Post.findById(postId);
 
-    if (!post) return { statusCode: 400, response: { success: false, message: "Post does not exist" } };
+    if (!post) return {
+        statusCode: 400, response: {
+            success: false, message: "Post does not exist", notification: {
+                value: true,
+                message: "Post does not exist"
+            }
+        }
+    };
 
-    if (String(userId) !== String(post.createdBy)) return { statusCode: 400, response: { success: false, message: "Post is not created by user" } };
+    if (String(userId) !== String(post.createdBy)) return {
+        statusCode: 400, response: {
+            success: false, message: "Post is not created by user", notification: {
+                value: true,
+                message: "Post is not created by user"
+            }
+        }
+    };
 
     // const len = savedPosts.indexOf(postId);
 
     await post.deleteOne();
 
-    return { statusCode: 200, response: { success: true, message: "Post is deleted" } };
+    return {
+        statusCode: 200, response: {
+            success: true, message: "Post is deleted", notification: {
+                value: true,
+                message: "Post is deleted"
+            }
+        }
+    };
 
 }
 
@@ -99,8 +134,14 @@ exports.getUserPosts = async function (email) {
             like: hasUserLiked(item.likes, user._id),
             likeCount: item.likes.length
         }))
-        console.log("posts", posts);
-        return posts;
+
+        return {
+            statusCode: 200, response: {
+                success: true, data: posts, notification: {
+                    value: false
+                }
+            }
+        };
 
     } catch (e) {
         // Log Errors
@@ -133,7 +174,14 @@ exports.getSavedPosts = async function (email) {
         }))
         savedPosts = savedPosts.filter((item) => item)
 
-        return { statusCode: 200, response: { success: true, data: savedPosts } };
+        return {
+            statusCode: 200, response: {
+                success: true, data: savedPosts,
+                notification: {
+                    value: false
+                }
+            }
+        };
 
 
     } catch (e) {
@@ -163,7 +211,14 @@ exports.getAllPosts = async function (email) {
 
         posts = posts.filter((item) => !item.hide)
 
-        return posts;
+        return {
+            statusCode: 200, response: {
+                success: true, data: posts,
+                notification: {
+                    value: false
+                }
+            }
+        };
 
     } catch (e) {
         // Log Errors
@@ -175,7 +230,15 @@ exports.likePost = async function (email, postId, like) {
     const user = await User.findOne({ email: email });
     console.log(user._id)
     const post = await Post.findById(postId);
-    if (!post) return { statusCode: 400, response: { success: false, message: "Post does not exist" } };
+    if (!post) return {
+        statusCode: 400, response: {
+            success: false, message: "Post does not exist",
+            notification: {
+                value: true,
+                message: "Post does not exist"
+            }
+        }
+    };
 
     console.log("likes", post.likes)
     const len = post.likes.indexOf(user._id);
@@ -184,9 +247,24 @@ exports.likePost = async function (email, postId, like) {
         if (len < 0) {
             post.likes.unshift(user._id);
             await post.save();
-            return { statusCode: 200, response: { success: true, message: "Post liked" } };
+            return {
+                statusCode: 200, response: {
+                    success: true, message: "Post liked",
+                    notification: {
+                        value: true,
+                        message: "You liked a post"
+                    }
+                }
+            };
         } else {
-            return { statusCode: 200, response: { success: true, message: "Already liked post" } };
+            return {
+                statusCode: 200, response: {
+                    success: true, message: "Already liked post", notification: {
+                        value: true,
+                        message: "Already liked a post"
+                    }
+                }
+            };
         }
     }
     else {
@@ -194,7 +272,15 @@ exports.likePost = async function (email, postId, like) {
             const index = post.likes.indexOf(user._id);
             post.likes.splice(index, 1);
             await post.save();
-            return { statusCode: 200, response: { success: true, message: "Post unliked" } };
+            return {
+                statusCode: 200, response: {
+                    success: true, message: "Post unliked",
+                    notification: {
+                        value: true,
+                        message: "Post Unliked"
+                    }
+                }
+            };
         } else {
             return { statusCode: 200, response: { success: true, message: "Already unliked post" } };
         }
@@ -211,7 +297,15 @@ exports.addSavedPost = async function (email, postId, saved) {
     const savedPosts = user.savedPosts;
 
     const post = await Post.findById(postId);
-    if (!post) return { statusCode: 400, response: { success: false, message: "Post does not exist" } };
+    if (!post) return {
+        statusCode: 400, response: {
+            success: false, message: "Post does not exist",
+            notification: {
+                value: true,
+                message: "Post does not exist"
+            }
+        }
+    };
 
     const len = savedPosts.indexOf(postId);
 
@@ -219,7 +313,15 @@ exports.addSavedPost = async function (email, postId, saved) {
         if (len < 0) {
             savedPosts.unshift(postId);
             await user.save();
-            return { statusCode: 200, response: { success: true, message: "Saved post", data: savedPosts } };
+            return {
+                statusCode: 200, response: {
+                    success: true, message: "Saved post", data: savedPosts,
+                    notification: {
+                        value: true,
+                        message: "Post is saved"
+                    }
+                }
+            };
         } else {
             return { statusCode: 200, response: { success: true, message: "Already saved post" } };
         }
@@ -244,14 +346,35 @@ exports.hidePost = async function (email, postId, hide) {
     const userId = user._id;
     const post = await Post.findById(postId);
     // console.log("post", post)
-    if (!post) return { statusCode: 400, response: { success: false, message: "Post does not exist" } };
+    if (!post) return {
+        statusCode: 400, response: {
+            success: false, message: "Post does not exist", notification: {
+                value: true,
+                message: "Post does not exist"
+            }
+        }
+    };
 
-    if (!isUserOwner(userId, post.createdBy)) return { statusCode: 400, response: { success: false, message: "Post is not created by user" } };
+    if (!isUserOwner(userId, post.createdBy)) return {
+        statusCode: 400, response: {
+            success: false, message: "Post is not created by user", notification: {
+                value: true,
+                message: "Post is not created by user"
+            }
+        }
+    };
 
     // const len = savedPosts.indexOf(postId);
     post.hide = hide;
     await post.save();
     const message = hide ? "Post is hidden" : "Post is visible"
-    return { statusCode: 200, response: { success: true, message } };
+    return {
+        statusCode: 200, response: {
+            success: true, message, notification: {
+                value: true,
+                message: message
+            }
+        }
+    };
 
 }

@@ -3,9 +3,8 @@ const PostService = require("../services/post.service")
 
 exports.createPost = async function (req, res, next) {
     try {
-        const response = await PostService.createPost(req.body, req.files);
-        console.log("res", response)
-        res.send(response);
+        const { statusCode, response } = await PostService.createPost(req.body, req.files);
+        res.status(statusCode).send(response);
     }
     catch (error) {
         next(error);
@@ -15,8 +14,8 @@ exports.createPost = async function (req, res, next) {
 exports.getUserPosts = async function (req, res, next) {
     try {
         const { email } = req.body;
-        const response = await PostService.getUserPosts(email);
-        res.status(200).send(response);
+        const { statusCode, response } = await PostService.getUserPosts(email);
+        res.status(statusCode).send(response);
     }
     catch (error) {
         next(error);
@@ -27,7 +26,7 @@ exports.deletePost = async function (req, res, next) {
     try {
         const { email, postId } = req.body;
         const { statusCode, response } = await PostService.deletePost(email, postId);
-        console.log("response", response)
+
         res.status(statusCode).send(response);
     }
     catch (error) {
@@ -49,8 +48,8 @@ exports.getSavedPosts = async function (req, res, next) {
 exports.getAllPosts = async function (req, res, next) {
     const { email } = req.body;
     try {
-        const response = await PostService.getAllPosts(email);
-        res.status(200).send(response);
+        const { statusCode, response } = await PostService.getAllPosts(email);
+        res.status(statusCode).send(response);
     }
     catch (error) {
         next(error);

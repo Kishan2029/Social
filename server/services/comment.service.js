@@ -29,7 +29,14 @@ exports.addComment = async function (email, postId, message) {
         // await Promise.all(async () => await post.save(), async () => await newComment.save())
 
 
-        return { statusCode: 200, response: { success: true, message: "Comment added" } };
+        return {
+            statusCode: 200, response: {
+                success: true, message: "Comment added", notification: {
+                    value: true,
+                    message: "comment added"
+                }
+            }
+        };
     } catch (e) {
         // Log Errors
         console.log("error", e)
@@ -54,7 +61,13 @@ exports.getComments = async function (postId) {
 
 
 
-        return { statusCode: 200, response: { success: true, data: comment } };
+        return {
+            statusCode: 200, response: {
+                success: true, data: comment, notification: {
+                    value: false
+                }
+            }
+        };
     } catch (e) {
         // Log Errors
         console.log("error", e)
