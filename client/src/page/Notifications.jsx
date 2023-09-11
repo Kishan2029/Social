@@ -9,17 +9,29 @@ import {
   Avatar,
   Divider,
   Card,
+  CircularProgress,
 } from "@mui/material";
+import { useQuery } from "react-query";
+import { fetchNotifications } from "../reactQuery/query";
+import { useSelector } from "react-redux";
 
 const Notifications = () => {
-  console.log("notification page");
-  const friends = [
-    { name: "John Doe", friends: 6 },
-    { name: "John Doe", friends: 6 },
-    { name: "John Doe", friends: 6 },
-    { name: "John Doe", friends: 6 },
-    { name: "John Doe", friends: 6 },
-  ];
+  const auth = useSelector((state) => state.auth.user);
+  const { data, error, isError, isLoading } = useQuery({
+    queryFn: () => fetchNotifications({ email: auth.email }),
+    queryKey: ["notifications"],
+  });
+  if (isLoading) {
+    return <CircularProgress />;
+  }
+  console.log("data", data);
+  // const friends = [
+  //   { name: "John Doe", friends: 6 },
+  //   { name: "John Doe", friends: 6 },
+  //   { name: "John Doe", friends: 6 },
+  //   { name: "John Doe", friends: 6 },
+  //   { name: "John Doe", friends: 6 },
+  // ];
   return (
     <Box>
       <Typography
@@ -30,7 +42,7 @@ const Notifications = () => {
 
       <Card sx={{ padding: "1rem" }}>
         {/* List of friends */}
-        {friends.map((item) => {
+        {data.map((item) => {
           return (
             <>
               <Box
@@ -42,7 +54,10 @@ const Notifications = () => {
               >
                 <Avatar sx={{ height: 45, width: 45 }} />
                 <Typography>
-                  <b>John liked </b>your photo
+                  <b>{item.name} </b>{" "}
+                  {item.type === like
+                    ? "liked your Post"
+                    : "commented on Your post"}
                 </Typography>
               </Box>
               <Divider sx={{ mb: "1rem", mt: "1rem" }} />

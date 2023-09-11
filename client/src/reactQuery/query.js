@@ -22,3 +22,13 @@ export const fetchComments = async (body) => {
     return data.data;
 }
 
+export const fetchNotifications = async (body) => {
+    const { data } = await axios.post(config.urls.notification.getNotifications(), body, {
+        headers: {
+            Authorization: "Bearer " + getAccessToken(),
+        },
+    });
+    return data.data;
+}
+
+

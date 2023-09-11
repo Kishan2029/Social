@@ -28,7 +28,7 @@ exports.addFriend = async function (email, freindId, add) {
         const user = await User.findOne({ email: email }).select({ friends: 1 });
         const friends = user.friends;
         console.log("friends", friends)
-        const friendExist = await User.findById(freindId);
+        const friendExist = await User.findById(freindId).select({ _id: 1 });
         // console.log(friendExist)
         if (!friendExist) return {
             statusCode: 400, response: {
@@ -87,7 +87,7 @@ exports.getFriends = async function (email) {
         const user = await User.findOne({ email: email }).select({ friends: 1 });
         let friends = user.friends;
         friends = await Promise.all(friends.map(async (id) => {
-            const temp = await User.findById(id);
+            const temp = await User.findById(id).select({ name: 1 });
             return {
                 name: temp.name
             }
@@ -133,7 +133,7 @@ exports.getPhotos = async function (email) {
 exports.updateProfileText = async function (email, location, name) {
 
     try {
-        const user = await User.findOne({ email: email });
+        const user = await User.findOne({ email: email }).select({ location: 1, name: 1 });
         if (!user) return {
             statusCode: 400, response: {
                 success: false, message: "User does not exist", notification: {
@@ -163,7 +163,7 @@ exports.updateProfileText = async function (email, location, name) {
 exports.updateProfileImage = async function (email, imageType, file) {
 
     try {
-        const user = await User.findOne({ email: email });
+        const user = await User.findOne({ email: email }).select({ coverImage: 1, profileImage: 1 });
         if (!user) return {
             statusCode: 400, response: {
                 success: false, message: "User does not exist", notification: {

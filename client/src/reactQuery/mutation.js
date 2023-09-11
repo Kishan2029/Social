@@ -75,3 +75,12 @@ export const addComment = async (body) => {
     return data.data;
 }
 
+// Notification
+export const addNotification = async (body) => {
+    const { data } = await axios.post(config.urls.notification.addNotification, body, {
+        headers: {
+            Authorization: "Bearer " + getAccessToken(),
+        },
+    });
+    return data.data;
+}

@@ -12,7 +12,7 @@ const PostSchema = new mongoose.Schema({
     },
     images: [{
         data: Buffer,
-        contentType: String
+        contentType: String,
     }],
     likes: [{
         type: mongoose.Schema.ObjectId,

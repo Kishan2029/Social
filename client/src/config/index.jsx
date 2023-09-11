@@ -168,5 +168,15 @@ export const config = {
         return `${import.meta.env.VITE_BACKEND_URL}/comment`;
       },
     },
+    notification: {
+      addNotification: () => {
+        return `${
+          import.meta.env.VITE_BACKEND_URL
+        }/notification/addNotification`;
+      },
+      getNotifications: () => {
+        return `${import.meta.env.VITE_BACKEND_URL}/notification`;
+      },
+    },
   },
 };

@@ -16,7 +16,7 @@ dist-ssr
 .env.dev
 credentials
 firebaseConfig.js
-uploads
+server/uploads
 
 # Editor directories and files
 .vscode/*

@@ -49,7 +49,7 @@ exports.createPost = async function (body, file) {
     const { email, content } = body;
 
     try {
-        const user = await User.findOne({ email: email });
+        const user = await User.findOne({ email: email }).select({ _id: 1 });
         const images = file.map((item) => {
             return {
                 data: fs.readFileSync(path.join('./uploads/' + item.filename)),
@@ -63,10 +63,11 @@ exports.createPost = async function (body, file) {
         }
 
         const newPost = new Post(post)
-        await newPost.save();
+        const res = await newPost.save();
         return {
             statusCode: 200, response: {
                 success: true, message: "New post is created",
+                data: res,
                 notification: {
                     value: true,
                     message: "New post is created"
@@ -81,7 +82,7 @@ exports.createPost = async function (body, file) {
 }
 
 exports.deletePost = async function (email, postId) {
-    const user = await User.findOne({ email: email });
+    const user = await User.findOne({ email: email }).select({ _id: 1 });
 
     const userId = user._id;
     const post = await Post.findById(postId);
@@ -104,8 +105,6 @@ exports.deletePost = async function (email, postId) {
         }
     };
 
-    // const len = savedPosts.indexOf(postId);
-
     await post.deleteOne();
 
     return {
@@ -122,7 +121,7 @@ exports.deletePost = async function (email, postId) {
 exports.getUserPosts = async function (email) {
 
     try {
-        const user = await User.findOne({ email: email });
+        const user = await User.findOne({ email: email }).select({ _id: 1, name: 1, savedPosts: 1 });
         // console.log("user",user)
         let posts = await Post.find({ createdBy: user._id }).sort({ createdAt: -1 })
         posts = posts.map((item) => ({
@@ -152,7 +151,7 @@ exports.getUserPosts = async function (email) {
 exports.getSavedPosts = async function (email) {
 
     try {
-        const user = await User.findOne({ email: email });
+        const user = await User.findOne({ email: email }).select({ _id: 1, name: 1, savedPosts: 1 });
 
         let savedPosts = await Promise.all(user.savedPosts.map(async (postId) => {
             let post = await Post.findById(postId);
@@ -193,9 +192,10 @@ exports.getSavedPosts = async function (email) {
 exports.getAllPosts = async function (email) {
 
     try {
-        const user = await User.findOne({ email: email });
-        // // console.log("user",user)
-        var posts = await Post.find().sort({ createdAt: -1 })
+        const user = await User.findOne({ email: email }).select({ _id: 1, name: 1, savedPosts: 1 });
+        console.log("user", user)
+        var posts = await Post.find().sort({ createdAt: -1 });
+        console.log("posts")
         posts = await Promise.all(posts.map(async (item) => {
 
             return {
@@ -227,9 +227,9 @@ exports.getAllPosts = async function (email) {
 }
 
 exports.likePost = async function (email, postId, like) {
-    const user = await User.findOne({ email: email });
-    console.log(user._id)
-    const post = await Post.findById(postId);
+    const user = await User.findOne({ email: email }).select({ _id: 1 });
+
+    const post = await Post.findById(postId).select({ likes: 1 });
     if (!post) return {
         statusCode: 400, response: {
             success: false, message: "Post does not exist",
@@ -293,10 +293,10 @@ exports.likePost = async function (email, postId, like) {
 }
 
 exports.addSavedPost = async function (email, postId, saved) {
-    const user = await User.findOne({ email: email });
+    const user = await User.findOne({ email: email }).select({ _id: 1, savedPosts: 1 });
     const savedPosts = user.savedPosts;
 
-    const post = await Post.findById(postId);
+    const post = await Post.findById(postId).select({ _id: 1 });
     if (!post) return {
         statusCode: 400, response: {
             success: false, message: "Post does not exist",
@@ -340,11 +340,11 @@ exports.addSavedPost = async function (email, postId, saved) {
 }
 
 exports.hidePost = async function (email, postId, hide) {
-    const user = await User.findOne({ email: email });
+    const user = await User.findOne({ email: email }).select({ _id: 1 });
     // console.log("user", user)
     // console.log(user)
     const userId = user._id;
-    const post = await Post.findById(postId);
+    const post = await Post.findById(postId).select({ _id: 1, createdBy: 1, hide: 1 });
     // console.log("post", post)
     if (!post) return {
         statusCode: 400, response: {

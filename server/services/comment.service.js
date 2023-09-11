@@ -3,14 +3,14 @@ const Post = require('../models/post.model')
 const Comment = require('../models/comment.model')
 const PostService = require('./post.service')
 
-const getUserName = async (id) => {
-    const user = await User.findById(id);
+const getUserName = exports.getUserName = async (id) => {
+    const user = await User.findById(id).select({ name: 1 });
     return user.name;
 }
 
 exports.addComment = async function (email, postId, message) {
     try {
-        const user = await User.findOne({ email: email });
+        const user = await User.findOne({ email: email }).select({ _id: 1 });
         const post = await Post.findById(postId);
 
 
@@ -49,13 +49,13 @@ exports.getComments = async function (postId) {
         let comment = await Comment.find({ post: postId }).sort({ createdAt: -1 })
 
         comment = await Promise.all(comment.map(async (item) => {
-            // const name = await getUserName(item.createdBy);
+            const name = await getUserName(item.createdBy);
             return ({
 
                 id: item._id,
                 message: item.message,
                 time: PostService.postCreationTime(item.createdAt),
-                name: "John Doe"
+                name
             })
         }))
 

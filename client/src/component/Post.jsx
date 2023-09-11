@@ -17,7 +17,7 @@ import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import ShareIcon from "@mui/icons-material/Share";
 import PostOptions from "./PostOptions";
 import { generateImageUrl } from "../util/helper";
-import { likePost, addComment } from "../reactQuery/mutation";
+import { likePost, addComment, addNotification } from "../reactQuery/mutation";
 import { useMutation, useQueryClient } from "react-query";
 import { useSelector } from "react-redux";
 import Comment from "./Comment";
@@ -46,10 +46,22 @@ const Post = ({
   const queryClient = useQueryClient();
 
   // mutations
+  const notificationMutation = useMutation({
+    mutationFn: (body) => addNotification(body),
+  });
+
   const likeMutation = useMutation({
     mutationFn: (body) => likePost(body),
     onSuccess: async (queryKey, body) => {
       console.log("success like");
+      if (!owner && body.changeState) {
+        notificationMutation.mutate({
+          type: "like",
+          postId: body.postId,
+          email: auth.email,
+        });
+      }
+
       // queryClient.setQueriesData(["posts"], (oldData) => {
       //   const newData = oldData.map((item) => {
       //     if (item._id === body.postId) {
@@ -131,6 +143,13 @@ const Post = ({
       // set data
       console.log("comment success");
       queryClient.invalidateQueries(["comments", postId]);
+      if (!owner) {
+        notificationMutation.mutate({
+          type: "like",
+          postId: body.postId,
+          email: auth.email,
+        });
+      }
       // queryClient.setQueriesData(["comments", postId], (oldData) => {
       //   const newData = [
       //     ...oldData,
@@ -250,6 +269,7 @@ const Post = ({
             {dots}
           </Box>
         </Box>
+
         {/* Content */}
         <Typography
           variant="body1"

@@ -39,10 +39,31 @@ const CreatePost = () => {
 
   const mutation = useMutation({
     mutationFn: (body) => createPostRequest(body),
-    onSuccess: async () => {
+    onSuccess: async (data) => {
       queryClient.invalidateQueries(["posts"]);
       queryClient.invalidateQueries(["userPost"]);
       queryClient.invalidateQueries(["savedPosts"]);
+
+      console.log("data", data);
+      // queryClient.setQueriesData(["posts"], (oldData) => {
+      //   const newData = [
+      //     {
+      //       _id: body.postId,
+      //       postId: body.postId,
+      //       name: body.other.name,
+      //       postTime: body.other.time,
+      //       content: body.other.content,
+      //       images: body.other.imageData,
+      //       saved: true,
+      //       owner: body.other.owner,
+      //       hide: body.other.hide,
+      //       pageName: "savePost",
+      //     },
+      //     ...oldData,
+      //   ];
+
+      //   return newData;
+      // });
     },
   });
 
