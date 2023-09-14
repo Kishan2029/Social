@@ -11,8 +11,6 @@ const { errorHandler, logger, checkAuth } = require('./middleware/index');
 const connectDB = require('./config/db');
 
 
-
-
 // Cors Setup
 const corsOptions = {
     origin: process.env.FRONTEND_URL,
@@ -35,6 +33,20 @@ connectDB();
 
 
 app.get('/', (req, res) => {
+    res.send('Server is working')
+})
+
+app.get('/test', (req, res) => {
+
+    const cloudinary = require('cloudinary').v2;
+    cloudinary.config({
+        cloud_name: 'do9w4fypf',
+        api_key: process.env.CLOUDINARY_API_KEY,
+        api_secret: process.env.CLOUDINARY_API_SECRET
+    });
+    cloudinary.uploader.upload("https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Blairmorite_from_the_Crowsnest_Formation.jpg/1000px-Blairmorite_from_the_Crowsnest_Formation.jpg",
+        { public_id: "test" },
+        function (error, result) { console.log(result); });
     res.send('Server is working')
 })
 

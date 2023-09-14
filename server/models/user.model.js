@@ -15,13 +15,19 @@ const UserSchema = new mongoose.Schema({
     location: {
         type: String,
     },
+    // coverImage: {
+    //     data: Buffer,
+    //     contentType: String
+    // },
+    // profileImage: {
+    //     data: Buffer,
+    //     contentType: String
+    // },
     coverImage: {
-        data: Buffer,
-        contentType: String
+        type: String
     },
     profileImage: {
-        data: Buffer,
-        contentType: String
+        type: String
     },
     savedPosts: [{
         type: mongoose.Schema.ObjectId,

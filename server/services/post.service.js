@@ -345,7 +345,7 @@ exports.hidePost = async function (email, postId, hide) {
     // console.log(user)
     const userId = user._id;
     const post = await Post.findById(postId).select({ _id: 1, createdBy: 1, hide: 1 });
-    // console.log("post", post)
+
     if (!post) return {
         statusCode: 400, response: {
             success: false, message: "Post does not exist", notification: {

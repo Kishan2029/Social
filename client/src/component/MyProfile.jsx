@@ -78,6 +78,7 @@ const MyProfile = ({
   };
 
   const saveCoverImage = () => {
+    console.log("clicked");
     let formData = new FormData();
 
     formData.append("images", coverImage);
@@ -95,18 +96,18 @@ const MyProfile = ({
     setValue(newValue);
   };
 
-  // useEffect(() => {
-  //   if (profileImage !== undefined) {
-  //     console.log("profileImage", profileImage);
-  //     let formData = new FormData();
+  useEffect(() => {
+    if (profileImage !== undefined) {
+      console.log("profileImage", profileImage);
+      let formData = new FormData();
 
-  //     formData.append("images", profileImage);
-  //     formData.append("email", auth.email);
-  //     formData.append("imageType", "profile");
+      formData.append("images", profileImage);
+      formData.append("email", auth.email);
+      formData.append("imageType", "profile");
 
-  //     saveProfileImageMutatin.mutate(formData);
-  //   }
-  // }, [profileImage]);
+      saveProfileImageMutatin.mutate(formData);
+    }
+  }, [profileImage]);
   return (
     <Card
       sx={{ height: editProfile ? "48.3vh" : "40vh", position: "relative" }}
@@ -116,9 +117,9 @@ const MyProfile = ({
         <img
           src={
             coverImage
-              ? coverImage.data !== undefined
-                ? generateImageUrl(coverImage)
-                : URL.createObjectURL(coverImage)
+              ? coverImage.name !== undefined
+                ? URL.createObjectURL(coverImage)
+                : coverImage
               : cover1
           }
           // src={cover1}
@@ -224,7 +225,9 @@ const MyProfile = ({
               multiple
               // value={image}
               onChange={(event) => {
+                console.log("hello");
                 setCoverImage(event.target.files[0]);
+
                 setEditCoverImage(true);
               }}
             />
@@ -244,9 +247,9 @@ const MyProfile = ({
         {profileImage !== undefined ? (
           <Avatar
             src={
-              profileImage.data !== undefined
-                ? generateImageUrl(profileImage)
-                : URL.createObjectURL(profileImage)
+              profileImage.name !== undefined
+                ? URL.createObjectURL(profileImage)
+                : profileImage
             }
             sx={{
               height: "9rem",

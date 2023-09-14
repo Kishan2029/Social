@@ -1,7 +1,15 @@
 var User = require('../models/user.model')
 const Post = require('../models/post.model')
 const fs = require('fs')
-const path = require('path')
+const path = require('path');
+const { error } = require('console');
+
+const cloudinary = require('cloudinary').v2;
+cloudinary.config({
+    cloud_name: 'do9w4fypf',
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+});
 
 exports.getUserInfo = async function (email) {
 
@@ -161,9 +169,10 @@ exports.updateProfileText = async function (email, location, name) {
 }
 
 exports.updateProfileImage = async function (email, imageType, file) {
-
+    console.log("hello")
     try {
         const user = await User.findOne({ email: email }).select({ coverImage: 1, profileImage: 1 });
+
         if (!user) return {
             statusCode: 400, response: {
                 success: false, message: "User does not exist", notification: {
@@ -174,16 +183,26 @@ exports.updateProfileImage = async function (email, imageType, file) {
         };
 
         if (imageType === "cover") {
-            user.coverImage = {
-                data: fs.readFileSync(path.join('./uploads/' + file[0].filename)),
-                contentType: file[0].mimetype
-            }
+
+            const cover = await cloudinary.uploader.upload(path.join('./uploads/' + file[0].filename),
+                { public_id: file[0].filename },
+                (error, result) => {
+                    console.log("Image upload error")
+                })
+
+            user.coverImage = cover.url
+
+
         }
         else if (imageType === "profile") {
-            user.profileImage = {
-                data: fs.readFileSync(path.join('./uploads/' + file[0].filename)),
-                contentType: file[0].mimetype
-            }
+            const profile = await cloudinary.uploader.upload(path.join('./uploads/' + file[0].filename),
+                { public_id: file[0].filename },
+                (error, result) => {
+                    console.log("Image upload error")
+
+                })
+            console.log("profile", profile)
+            user.profileImage = profile.url;
         }
         await user.save();
 
