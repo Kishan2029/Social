@@ -16,16 +16,18 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import ShareIcon from "@mui/icons-material/Share";
 import PostOptions from "./PostOptions";
-import { generateImageUrl } from "../util/helper";
+import { generateImageUrl, stringToColor } from "../util/helper";
 import { likePost, addComment, addNotification } from "../reactQuery/mutation";
 import { useMutation, useQueryClient } from "react-query";
 import { useSelector } from "react-redux";
 import Comment from "./Comment";
+import UserAvatar from "./UserAvatar";
 
 const Post = ({
   content,
   name,
   imageData,
+  avatar,
   time,
   postId,
   saved,
@@ -241,7 +243,28 @@ const Post = ({
               gap: 2,
             }}
           >
-            <Avatar sx={{ width: 45, height: 45 }} />
+            <UserAvatar avatar={avatar} name={name} />
+            {/* {avatar !== undefined ? (
+              <Avatar
+                src={avatar}
+                sx={{
+                  width: 45,
+                  height: 45,
+                }}
+              />
+            ) : (
+              <Avatar
+                sx={{
+                  width: 45,
+                  height: 45,
+                  fontSize: "2rem",
+                  backgroundColor: stringToColor(name),
+                }}
+              >
+                {name[0]}
+              </Avatar>
+            )} */}
+
             <Box
               sx={{
                 display: "flex",
@@ -281,9 +304,9 @@ const Post = ({
         {/* images */}
         {imageData.length > 0 && (
           <ImageList variant="masonry" cols={2} rowHeight={300} gap={5}>
-            {imageData.map((item) => {
+            {imageData.map((item, index) => {
               return (
-                <ImageListItem key={item._id}>
+                <ImageListItem key={index}>
                   <img
                     src={item}
                     loading="lazy"
@@ -337,7 +360,7 @@ const Post = ({
 
         {/* Comment text */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 2, mt: "2rem" }}>
-          <Avatar sx={{ width: 45, height: 45 }} />
+          <UserAvatar avatar={auth.avatar} name={auth.name} />
 
           <TextField
             placeholder="Leave a Comment"

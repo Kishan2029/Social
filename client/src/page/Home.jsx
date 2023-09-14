@@ -51,6 +51,7 @@ const Home = () => {
             likeBoolean={post.like}
             likeCount={post.likeCount}
             commentMessageCount={post.commentCount}
+            avatar={post.avatar}
             pageName={"allPost"}
           />
         );

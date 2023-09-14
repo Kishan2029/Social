@@ -135,15 +135,20 @@ exports.getUserPosts = async function (email) {
         const user = await User.findOne({ email: email }).select({ _id: 1, name: 1, savedPosts: 1 });
         // console.log("user",user)
         let posts = await Post.find({ createdBy: user._id }).sort({ createdAt: -1 })
-        posts = posts.map((item) => ({
-            ...item._doc,
-            name: user.name,
-            postTime: postCreationTime(item._doc.createdAt),
-            saved: user.savedPosts.includes(item._id) ? true : false,
-            owner: true,
-            like: hasUserLiked(item.likes, user._id),
-            likeCount: item.likes.length
+        posts = await Promise.all(posts.map(async (item) => {
+            const userAvatar = await User.findById(item.createdBy).select({ _id: 1, name: 1, profileImage: 1 });
+            return {
+                ...item._doc,
+                name: userAvatar.name,
+                avatar: userAvatar.profileImage,
+                postTime: postCreationTime(item._doc.createdAt),
+                saved: user.savedPosts.includes(item._id) ? true : false,
+                owner: true,
+                like: hasUserLiked(item.likes, user._id),
+                likeCount: item.likes.length
+            }
         }))
+
 
         return {
             statusCode: 200, response: {
@@ -167,11 +172,13 @@ exports.getSavedPosts = async function (email) {
         let savedPosts = await Promise.all(user.savedPosts.map(async (postId) => {
             let post = await Post.findById(postId);
             // console.log(post)
-            if (post)
+            if (post) {
+                const userAvatar = await User.findById(post.createdBy).select({ _id: 1, name: 1, profileImage: 1 });
                 return (
                     {
                         ...post._doc,
-                        name: user.name,
+                        name: userAvatar.name,
+                        avatar: userAvatar.profileImage,
                         postTime: postCreationTime(post.createdAt),
                         saved: true,
                         owner: isUserOwner(user._id, post.createdBy),
@@ -179,6 +186,7 @@ exports.getSavedPosts = async function (email) {
                         likeCount: post.likes.length
                     }
                 )
+            }
 
 
         }))
@@ -208,10 +216,11 @@ exports.getAllPosts = async function (email) {
         var posts = await Post.find().sort({ createdAt: -1 });
         console.log("posts")
         posts = await Promise.all(posts.map(async (item) => {
-
+            const userAvatar = await User.findById(item.createdBy).select({ _id: 1, name: 1, profileImage: 1 });
             return {
                 ...item._doc,
-                name: user.name,
+                name: userAvatar.name,
+                avatar: userAvatar.profileImage,
                 postTime: postCreationTime(item._doc.createdAt),
                 saved: user.savedPosts.includes(item._id) ? true : false,
                 owner: isUserOwner(user._id, item.createdBy),

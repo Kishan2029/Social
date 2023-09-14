@@ -25,13 +25,7 @@ const Notifications = () => {
     return <CircularProgress />;
   }
   console.log("data", data);
-  // const friends = [
-  //   { name: "John Doe", friends: 6 },
-  //   { name: "John Doe", friends: 6 },
-  //   { name: "John Doe", friends: 6 },
-  //   { name: "John Doe", friends: 6 },
-  //   { name: "John Doe", friends: 6 },
-  // ];
+
   return (
     <Box>
       <Typography
@@ -42,28 +36,36 @@ const Notifications = () => {
 
       <Card sx={{ padding: "1rem" }}>
         {/* List of friends */}
-        {data.map((item) => {
-          return (
-            <>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 2,
-                }}
-              >
-                <Avatar sx={{ height: 45, width: 45 }} />
-                <Typography>
-                  <b>{item.name} </b>{" "}
-                  {item.type === like
-                    ? "liked your Post"
-                    : "commented on Your post"}
-                </Typography>
-              </Box>
-              <Divider sx={{ mb: "1rem", mt: "1rem" }} />
-            </>
-          );
-        })}
+        {data.length === 0 ? (
+          <Box sx={{ height: "4rem", display: "flex", alignItems: "center" }}>
+            <Typography sx={{ textAlign: "left" }}>
+              You have no notification
+            </Typography>
+          </Box>
+        ) : (
+          data.map((item) => {
+            return (
+              <>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 2,
+                  }}
+                >
+                  <Avatar sx={{ height: 45, width: 45 }} />
+                  <Typography>
+                    <b>{item.name} </b>{" "}
+                    {item.type === like
+                      ? "liked your Post"
+                      : "commented on Your post"}
+                  </Typography>
+                </Box>
+                <Divider sx={{ mb: "1rem", mt: "1rem" }} />
+              </>
+            );
+          })
+        )}
       </Card>
     </Box>
   );

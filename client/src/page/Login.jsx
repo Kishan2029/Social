@@ -32,7 +32,7 @@ const Login = () => {
 
     dispatch(setLoader(true));
     signInWithPopup(auth, provider)
-      .then((result) => {
+      .then(async (result) => {
         const user = result.user;
         // console.log("user", user);
         const body = {
@@ -45,7 +45,27 @@ const Login = () => {
         localStorage.setItem("accessToken", user.accessToken);
 
         loginRequest(body);
-        dispatch(setUser(body));
+
+        // call userInfo
+        const { data } = await axios.get(
+          config.urls.user.getUserInfo(user.email),
+          {
+            headers: {
+              Authorization: "Bearer " + getAccessToken(),
+            },
+          }
+        );
+        console.log("data", data.data);
+        const globalUser = {
+          email: user.email,
+          name: data.data.name !== undefined ? data.data.name : user.name,
+          avatar:
+            data.data.profileImage !== undefined
+              ? data.data.profileImage
+              : null,
+        };
+        console.log("globalUser", globalUser);
+        dispatch(setUser(globalUser));
       })
       .catch((error) => {
         // Handle Errors here.

@@ -49,6 +49,7 @@ const UserPosts = () => {
             likeBoolean={post.like}
             likeCount={post.likeCount}
             commentMessageCount={post.commentCount}
+            avatar={post.avatar}
             pageName={"userPost"}
           />
         );

@@ -49,13 +49,14 @@ exports.getComments = async function (postId) {
         let comment = await Comment.find({ post: postId }).sort({ createdAt: -1 })
 
         comment = await Promise.all(comment.map(async (item) => {
-            const name = await getUserName(item.createdBy);
+            const user = await User.findById(item.createdBy).select({ name: 1, profileImage: 1 });
             return ({
 
                 id: item._id,
                 message: item.message,
                 time: PostService.postCreationTime(item.createdAt),
-                name
+                name: user.name,
+                avatar: user.profileImage
             })
         }))
 

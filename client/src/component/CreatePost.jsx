@@ -18,9 +18,10 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import { config } from "../config";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import { getAccessToken } from "../util/helper";
+import { getAccessToken, stringToColor } from "../util/helper";
 import { QueryClient, useMutation, useQueryClient } from "react-query";
 import Loading from "./Loading";
+import UserAvatar from "./UserAvatar";
 
 const CreatePost = () => {
   const [content, setContent] = useState("");
@@ -36,6 +37,8 @@ const CreatePost = () => {
       },
     });
   };
+
+  console.log("auth", auth.name);
 
   const mutation = useMutation({
     mutationFn: (body) => createPostRequest(body),
@@ -102,7 +105,28 @@ const CreatePost = () => {
   return (
     <Card sx={{ padding: "1rem", fontWeight: 300 }}>
       <Box sx={{ display: "flex", gap: 2 }}>
-        <Avatar sx={{ width: 45, height: 45 }} />
+        <UserAvatar name={auth.name} avatar={auth.avatar} />
+        {/* {auth.avatar !== null ? (
+          <Avatar
+            src={auth.avatar}
+            sx={{
+              width: 45,
+              height: 45,
+            }}
+          />
+        ) : (
+          <Avatar
+            sx={{
+              width: 45,
+              height: 45,
+              fontSize: "5rem",
+              backgroundColor: stringToColor(auth.name),
+            }}
+          >
+            K{auth.name[0]}
+          </Avatar>
+        )} */}
+
         {/* <TextareaAutosize
           minRows={3}
           maxRows={10}
