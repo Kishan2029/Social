@@ -15,6 +15,7 @@ exports.addFriend = async function (req, res, next) {
 
     try {
         const { email, friendId, add } = req.body;
+        console.log("body", req.body);
 
         const { statusCode, response } = await UserService.addFriend(email, friendId, add);
         res.status(statusCode).send(response);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Avatar,
   Box,
@@ -17,11 +17,17 @@ import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import ShareIcon from "@mui/icons-material/Share";
 import PostOptions from "./PostOptions";
 import { generateImageUrl, stringToColor } from "../util/helper";
-import { likePost, addComment, addNotification } from "../reactQuery/mutation";
-import { useMutation, useQueryClient } from "react-query";
+import {
+  likePost,
+  addComment,
+  addNotification,
+  addFriend,
+} from "../reactQuery/mutation";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useSelector } from "react-redux";
 import Comment from "./Comment";
 import UserAvatar from "./UserAvatar";
+import { fetchComments } from "../reactQuery/query";
 
 const Post = ({
   content,
@@ -37,6 +43,8 @@ const Post = ({
   likeBoolean,
   likeCount,
   commentMessageCount = 0,
+  friend,
+  createdBy,
 }) => {
   const [option, setOption] = useState(false);
   const [like, setLike] = useState(likeBoolean);
@@ -44,6 +52,7 @@ const Post = ({
   const [commentCount, setCommentCount] = useState(commentMessageCount);
   const [openComment, setOpenComment] = useState(false);
   const [commentMessage, setCommentMessage] = useState("");
+  const [friendStatus, setFriendStatus] = useState(friend);
   const auth = useSelector((state) => state.auth.user);
   const queryClient = useQueryClient();
 
@@ -167,6 +176,43 @@ const Post = ({
     },
   });
 
+  const friendMutation = useMutation({
+    mutationFn: (body) => addFriend(body),
+    onMutate: async (body) => {},
+    onSuccess: async (queryKey, body) => {
+      // set data
+      console.log("friend added");
+
+      queryClient.setQueriesData(["posts"], (oldData) => {
+        const newData = oldData.map((item) => {
+          if (body.friendId === item.createdBy) {
+            // console.log("body");
+            item.friend = body.add;
+            item.new = "new";
+          }
+          return item;
+        });
+        return newData;
+      });
+      queryClient.setQueriesData(["savedPosts"], (oldData) => {
+        const newData = oldData.map((item) => {
+          if (body.friendId === item.createdBy) {
+            // console.log("body");
+            item.friend = body.add;
+            item.new = "new";
+          }
+          return item;
+        });
+        return newData;
+      });
+    },
+  });
+
+  // const { data, error, isError, isLoading } = useQuery({
+  //   queryFn: () => fetchComments({ postId }),
+  //   queryKey: ["comments", postId],
+  // });
+
   const clickLike = (changeState) => {
     likeMutation.mutate({
       email: auth.email,
@@ -178,6 +224,21 @@ const Post = ({
       ? setCount((count) => count + 1)
       : setCount((count) => count - 1);
   };
+
+  const clickFollow = (changeState) => {
+    friendMutation.mutate({
+      email: auth.email,
+      friendId: createdBy,
+      add: changeState,
+    });
+    console.log(auth.email, createdBy, changeState);
+    setFriendStatus(changeState);
+  };
+
+  // whenever friend changes update friendStatus
+  useEffect(() => {
+    setFriendStatus(friend);
+  }, [friend]);
   // console.log("commentMessageCount", commentMessageCount);
   // css
   const dots = [];
@@ -241,6 +302,7 @@ const Post = ({
             sx={{
               display: "flex",
               gap: 2,
+              // alignItems: "center",
             }}
           >
             <UserAvatar avatar={avatar} name={name} />
@@ -255,6 +317,19 @@ const Post = ({
               </Typography>
               <Typography>{`${time}`} ago</Typography>
             </Box>
+            {!owner && (
+              <Typography
+                sx={{
+                  ml: "2rem",
+                  color: friendStatus ? "var(--grayTitle)" : "var(--blue)",
+                  fontWeight: 500,
+                  cursor: "pointer",
+                }}
+                onClick={() => clickFollow(!friendStatus)}
+              >
+                {friendStatus ? "Following" : "Follow"}
+              </Typography>
+            )}
           </Box>
           <Box
             sx={{
@@ -367,14 +442,20 @@ const Post = ({
           />
         </Box>
         {/* Comment List */}
-        {/* {openComment && (
+        {openComment && (
           <Box sx={{ mt: "2rem" }}>
             <Comment postId={postId} />
           </Box>
+        )}
+        {/* {openComment ? (
+          <Box sx={{ mt: "2rem" }}>
+            <Comment postId={postId} />
+          </Box>
+        ) : (
+          <Box sx={{ mt: "2rem", visibility: "hidden" }}>
+            <Comment postId={postId} sx={{visibility: "hidden" }}/>
+          </Box>
         )} */}
-        <Box sx={{ mt: "2rem", display: openComment ? "block" : "none" }}>
-          <Comment postId={postId} />
-        </Box>
       </Card>
     </Box>
   );

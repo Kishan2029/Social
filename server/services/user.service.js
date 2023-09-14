@@ -31,7 +31,7 @@ exports.getUserInfo = async function (email) {
 }
 
 exports.addFriend = async function (email, freindId, add) {
-    // console.log("friendId", freindId)
+
     try {
         const user = await User.findOne({ email: email }).select({ friends: 1 });
         const friends = user.friends;
@@ -65,8 +65,7 @@ exports.addFriend = async function (email, freindId, add) {
                 return {
                     statusCode: 200, response: {
                         success: true, message: "Already you are friend", notification: {
-                            value: true,
-                            message: "You are alredy a friend"
+                            value: false
                         }
                     }
                 };
@@ -77,9 +76,22 @@ exports.addFriend = async function (email, freindId, add) {
                 const index = friends.indexOf(freindId);
                 friends.splice(index, 1);
                 await user.save();
-                return { statusCode: 200, response: { success: true, message: "Friend removed", data: friends } };
+                return {
+                    statusCode: 200, response: {
+                        success: true, message: "Friend removed", data: friends, notification: {
+                            value: true,
+                            message: "Your friend is removed"
+                        }
+                    }
+                };
             } else {
-                return { statusCode: 200, response: { success: true, message: "Already unfollowed" } };
+                return {
+                    statusCode: 200, response: {
+                        success: true, message: "Already unfollowed", notification: {
+                            value: false
+                        }
+                    }
+                };
             }
         }
 

@@ -29,6 +29,8 @@ const Home = () => {
     queryKey: ["posts"],
   });
 
+  console.log("data", data);
+
   if (isLoading) {
     return <Loading />;
   }
@@ -52,6 +54,8 @@ const Home = () => {
             likeCount={post.likeCount}
             commentMessageCount={post.commentCount}
             avatar={post.avatar}
+            friend={post.friend}
+            createdBy={post.createdBy}
             pageName={"allPost"}
           />
         );

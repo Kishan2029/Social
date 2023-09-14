@@ -45,6 +45,8 @@ const SavedPosts = () => {
               likeCount={post.likeCount}
               commentMessageCount={post.commentCount}
               avatar={post.avatar}
+              friend={post.friend}
+              createdBy={post.createdBy}
               pageName={"savePost"}
             />
           );

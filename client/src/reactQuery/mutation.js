@@ -65,6 +65,18 @@ export const updateProfileImage = async (body) => {
     return data.data;
 }
 
+export const addFriend = async (body) => {
+    console.log(config.urls.user.addFriend())
+    const { data } = await axios.post(config.urls.user.addFriend(), body, {
+        headers: {
+            Authorization: "Bearer " + getAccessToken(),
+
+        },
+    });
+
+    return data.data;
+}
+
 // Comments
 export const addComment = async (body) => {
     const { data } = await axios.post(config.urls.comment.addComment(), body, {

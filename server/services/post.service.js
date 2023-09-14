@@ -46,6 +46,10 @@ const isUserOwner = (userId, postId) => {
     return String(userId) === String(postId);
 }
 
+const isUserFriend = (array, item) => {
+    return array.includes(item);
+}
+
 const hasUserLiked = (array, item) => {
     return array.includes(item);
 }
@@ -132,7 +136,7 @@ exports.deletePost = async function (email, postId) {
 exports.getUserPosts = async function (email) {
 
     try {
-        const user = await User.findOne({ email: email }).select({ _id: 1, name: 1, savedPosts: 1 });
+        const user = await User.findOne({ email: email }).select({ _id: 1, name: 1, savedPosts: 1, friends: 1 });
         // console.log("user",user)
         let posts = await Post.find({ createdBy: user._id }).sort({ createdAt: -1 })
         posts = await Promise.all(posts.map(async (item) => {
@@ -145,7 +149,8 @@ exports.getUserPosts = async function (email) {
                 saved: user.savedPosts.includes(item._id) ? true : false,
                 owner: true,
                 like: hasUserLiked(item.likes, user._id),
-                likeCount: item.likes.length
+                likeCount: item.likes.length,
+                // friend: isUserFriend(user.friends, item.createdBy)
             }
         }))
 
@@ -167,7 +172,7 @@ exports.getUserPosts = async function (email) {
 exports.getSavedPosts = async function (email) {
 
     try {
-        const user = await User.findOne({ email: email }).select({ _id: 1, name: 1, savedPosts: 1 });
+        const user = await User.findOne({ email: email }).select({ _id: 1, name: 1, savedPosts: 1, friends: 1 });
 
         let savedPosts = await Promise.all(user.savedPosts.map(async (postId) => {
             let post = await Post.findById(postId);
@@ -183,7 +188,8 @@ exports.getSavedPosts = async function (email) {
                         saved: true,
                         owner: isUserOwner(user._id, post.createdBy),
                         like: hasUserLiked(post.likes, user._id),
-                        likeCount: post.likes.length
+                        likeCount: post.likes.length,
+                        friend: isUserFriend(user.friends, post.createdBy)
                     }
                 )
             }
@@ -211,12 +217,12 @@ exports.getSavedPosts = async function (email) {
 exports.getAllPosts = async function (email) {
 
     try {
-        const user = await User.findOne({ email: email }).select({ _id: 1, name: 1, savedPosts: 1 });
+        const user = await User.findOne({ email: email }).select({ _id: 1, name: 1, savedPosts: 1, friends: 1 });
         console.log("user", user)
         var posts = await Post.find().sort({ createdAt: -1 });
         console.log("posts")
         posts = await Promise.all(posts.map(async (item) => {
-            const userAvatar = await User.findById(item.createdBy).select({ _id: 1, name: 1, profileImage: 1 });
+            const userAvatar = await User.findById(item.createdBy).select({ _id: 1, name: 1, profileImage: 1, });
             return {
                 ...item._doc,
                 name: userAvatar.name,
@@ -225,7 +231,8 @@ exports.getAllPosts = async function (email) {
                 saved: user.savedPosts.includes(item._id) ? true : false,
                 owner: isUserOwner(user._id, item.createdBy),
                 like: hasUserLiked(item.likes, user._id),
-                likeCount: item.likes.length
+                likeCount: item.likes.length,
+                friend: isUserFriend(user.friends, item.createdBy)
             }
         }))
 

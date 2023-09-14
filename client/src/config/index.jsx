@@ -159,6 +159,9 @@ export const config = {
       updateProfileImage: () => {
         return `${import.meta.env.VITE_BACKEND_URL}/user/profile/updateImage`;
       },
+      addFriend: () => {
+        return `${import.meta.env.VITE_BACKEND_URL}/user/addFriend`;
+      },
     },
     comment: {
       addComment: () => {
