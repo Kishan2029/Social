@@ -3,7 +3,12 @@ const Post = require('../models/post.model')
 const fs = require('fs')
 const path = require('path')
 
-
+const cloudinary = require('cloudinary').v2;
+cloudinary.config({
+    cloud_name: 'do9w4fypf',
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+});
 
 
 const postCreationTime = exports.postCreationTime = (date) => {
@@ -50,12 +55,18 @@ exports.createPost = async function (body, file) {
 
     try {
         const user = await User.findOne({ email: email }).select({ _id: 1 });
-        const images = file.map((item) => {
-            return {
-                data: fs.readFileSync(path.join('./uploads/' + item.filename)),
-                contentType: item.mimetype
-            }
-        })
+        const images = await Promise.all(file.map(async (item) => {
+            console.log("item", item)
+            const postImage = await cloudinary.uploader.upload(path.join('./uploads/' + item.filename),
+                { public_id: item.filename },
+                (error, result) => {
+                    console.log("result", result)
+                    if (error)
+                        console.log("Image upload error")
+                })
+            return postImage.url;
+        }))
+        console.log("images", images)
         const post = {
             content,
             createdBy: user,

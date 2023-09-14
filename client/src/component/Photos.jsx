@@ -39,14 +39,14 @@ const Photos = () => {
         gap={12}
       >
         {data.map((item, index) => {
-          const blob = new Blob([Int8Array.from(item.data.data)], {
-            type: item.contentType,
-          });
-          const image = window.URL.createObjectURL(blob);
+          // const blob = new Blob([Int8Array.from(item.data.data)], {
+          //   type: item.contentType,
+          // });
+          // const image = window.URL.createObjectURL(blob);
           return (
             <ImageListItem key={index}>
               <img
-                src={image}
+                src={item}
                 loading="lazy"
                 style={{ borderRadius: "0.4rem" }}
               />

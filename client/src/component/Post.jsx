@@ -280,14 +280,16 @@ const Post = ({
 
         {/* images */}
         {imageData.length > 0 && (
-          <ImageList sx={{ height: 400 }} cols={2} rowHeight={300}>
+          <ImageList variant="masonry" cols={2} rowHeight={300} gap={5}>
             {imageData.map((item) => {
               return (
                 <ImageListItem key={item._id}>
                   <img
-                    src={generateImageUrl(item)}
+                    src={item}
                     loading="lazy"
-                    style={{ borderRadius: "0.4rem" }}
+                    style={{
+                      borderRadius: "0.4rem",
+                    }}
                   />
                 </ImageListItem>
               );
