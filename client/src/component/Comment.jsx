@@ -3,6 +3,7 @@ import React from "react";
 import { useQuery, useQueryClient } from "react-query";
 import { useSelector } from "react-redux";
 import { fetchComments } from "../reactQuery/query";
+import UserAvatar from "./UserAvatar";
 
 const Comment = ({ postId }) => {
   const queryClient = useQueryClient();
@@ -36,7 +37,7 @@ const Comment = ({ postId }) => {
         data.map((item) => {
           return (
             <Box sx={{ display: "flex", gap: 2 }} key={item.id}>
-              <Avatar sx={{ width: 45, height: 45 }} />
+              <UserAvatar name={item.name} avatar={item.avatar} />
               <Box
                 sx={{
                   display: "flex",

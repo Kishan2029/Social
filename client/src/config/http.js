@@ -18,7 +18,7 @@ export const axiosRequestInterceptor = () => axios.interceptors.request.use(
 export const axiosResponseInterceptor = () => axios.interceptors.response.use(
 
     function (response) {
-        console.log("res", response)
+        // console.log("res", response)
         if (response.data.notification.value) {
             notify("success", response.data.notification.message)
         }

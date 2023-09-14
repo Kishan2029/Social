@@ -125,7 +125,6 @@ const Post = ({
   const commentMutation = useMutation({
     mutationFn: (body) => addComment(body),
     onMutate: async (body) => {
-      console.log(body);
       console.log("onMutate");
       setCommentCount((old) => Number(old) + 1);
       queryClient.setQueriesData(["comments", postId], (oldData) => {
@@ -134,6 +133,7 @@ const Post = ({
             name: auth.name,
             time: "0 second ago",
             message: body.message,
+            avatar: auth.avatar,
           },
           ...oldData,
         ];
@@ -244,27 +244,6 @@ const Post = ({
             }}
           >
             <UserAvatar avatar={avatar} name={name} />
-            {/* {avatar !== undefined ? (
-              <Avatar
-                src={avatar}
-                sx={{
-                  width: 45,
-                  height: 45,
-                }}
-              />
-            ) : (
-              <Avatar
-                sx={{
-                  width: 45,
-                  height: 45,
-                  fontSize: "2rem",
-                  backgroundColor: stringToColor(name),
-                }}
-              >
-                {name[0]}
-              </Avatar>
-            )} */}
-
             <Box
               sx={{
                 display: "flex",
@@ -292,7 +271,6 @@ const Post = ({
             {dots}
           </Box>
         </Box>
-
         {/* Content */}
         <Typography
           variant="body1"
@@ -300,7 +278,6 @@ const Post = ({
         >
           {content}
         </Typography>
-
         {/* images */}
         {imageData.length > 0 && (
           <ImageList variant="masonry" cols={2} rowHeight={300} gap={5}>
@@ -319,7 +296,6 @@ const Post = ({
             })}
           </ImageList>
         )}
-
         {/* Like, Comment, Share */}
         <Box sx={{ display: "flex", gap: 5 }}>
           <Box
@@ -357,7 +333,6 @@ const Post = ({
             <Typography>10</Typography>
           </Box>
         </Box>
-
         {/* Comment text */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 2, mt: "2rem" }}>
           <UserAvatar avatar={auth.avatar} name={auth.name} />
@@ -375,26 +350,31 @@ const Post = ({
             onChange={(e) => setCommentMessage(e.target.value)}
             onKeyPress={(ev) => {
               if (ev.key === "Enter") {
+                console.log("Enter Pressed");
                 ev.preventDefault();
                 // console.log("comment", commentMessage);
-                commentMutation.mutate({
-                  email: auth.email,
-                  postId,
-                  message: commentMessage,
-                });
-                setCommentMessage("");
-                setOpenComment(true);
+                if (commentMessage !== "") {
+                  commentMutation.mutate({
+                    email: auth.email,
+                    postId,
+                    message: commentMessage,
+                  });
+                  setCommentMessage("");
+                  setOpenComment(true);
+                }
               }
             }}
           />
         </Box>
-
         {/* Comment List */}
-        {openComment && (
+        {/* {openComment && (
           <Box sx={{ mt: "2rem" }}>
             <Comment postId={postId} />
           </Box>
-        )}
+        )} */}
+        <Box sx={{ mt: "2rem", display: openComment ? "block" : "none" }}>
+          <Comment postId={postId} />
+        </Box>
       </Card>
     </Box>
   );

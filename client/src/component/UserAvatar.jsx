@@ -3,8 +3,6 @@ import React from "react";
 import { stringToColor } from "../util/helper";
 
 const UserAvatar = ({ name, avatar }) => {
-  console.log("avatar", avatar);
-  console.log("name", name);
   return (
     <>
       {avatar !== null && avatar !== undefined ? (
