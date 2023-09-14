@@ -1,4 +1,4 @@
-import { Box, Card, ImageList, ImageListItem } from "@mui/material";
+import { Box, Card, ImageList, ImageListItem, Typography } from "@mui/material";
 import pic1 from "../assets/image/pic1.jpeg";
 import React from "react";
 import { config } from "../config";
@@ -31,29 +31,44 @@ const Photos = () => {
   return (
     <Card sx={{ padding: "1rem", pt: "0" }}>
       {/* images */}
-      <ImageList
-        // sx={{ width: 500, height: 450 }}
-        variant="masonry"
-        cols={2}
-        rowHeight={200}
-        gap={12}
-      >
-        {data.map((item, index) => {
-          // const blob = new Blob([Int8Array.from(item.data.data)], {
-          //   type: item.contentType,
-          // });
-          // const image = window.URL.createObjectURL(blob);
-          return (
-            <ImageListItem key={index}>
-              <img
-                src={item}
-                loading="lazy"
-                style={{ borderRadius: "0.4rem" }}
-              />
-            </ImageListItem>
-          );
-        })}
-      </ImageList>
+      {data.length === 0 ? (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            mt: "2.5rem",
+            mb: "1.8rem",
+          }}
+        >
+          <Typography sx={{ fontSize: "1.5rem" }}>
+            You have no Photos
+          </Typography>
+        </Box>
+      ) : (
+        <ImageList
+          // sx={{ width: 500, height: 450 }}
+          variant="masonry"
+          cols={2}
+          rowHeight={200}
+          gap={12}
+        >
+          {data.map((item, index) => {
+            // const blob = new Blob([Int8Array.from(item.data.data)], {
+            //   type: item.contentType,
+            // });
+            // const image = window.URL.createObjectURL(blob);
+            return (
+              <ImageListItem key={index}>
+                <img
+                  src={item}
+                  loading="lazy"
+                  style={{ borderRadius: "0.4rem" }}
+                />
+              </ImageListItem>
+            );
+          })}
+        </ImageList>
+      )}
     </Card>
   );
 };

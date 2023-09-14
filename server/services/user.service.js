@@ -11,11 +11,35 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
+const calculateMutualFriends = (array1, array2) => {
+    array1 = array1.map((item) => String(item))
+    array2 = array2.map((item) => String(item))
+    console.log("array1", array1)
+    console.log("array2", array2)
+    const set1 = new Set(array1);
+    const set2 = new Set(array2);
+
+    // Initialize a count for common elements
+    let count = 0;
+
+    // Iterate through the smaller set and check if each element exists in the other set
+    const smallerSet = set1.size < set2.size ? set1 : set2;
+    const largerSet = set1.size < set2.size ? set2 : set1;
+
+    for (const element of smallerSet) {
+        if (largerSet.has(element)) {
+            count++;
+        }
+    }
+
+    return count;
+}
+
 exports.getUserInfo = async function (email) {
 
     try {
         const userInfo = await User.find({ email: email }).select({ description: 1, location: 1, name: 1, profileImage: 1, coverImage: 1, _id: 0 })
-        console.log("user", userInfo);
+
         return {
             statusCode: 200, response: {
                 success: true, data: userInfo[0], notification: {
@@ -35,7 +59,7 @@ exports.addFriend = async function (email, freindId, add) {
     try {
         const user = await User.findOne({ email: email }).select({ friends: 1 });
         const friends = user.friends;
-        console.log("friends", friends)
+
         const friendExist = await User.findById(freindId).select({ _id: 1 });
         // console.log(friendExist)
         if (!friendExist) return {
@@ -107,9 +131,12 @@ exports.getFriends = async function (email) {
         const user = await User.findOne({ email: email }).select({ friends: 1 });
         let friends = user.friends;
         friends = await Promise.all(friends.map(async (id) => {
-            const temp = await User.findById(id).select({ name: 1 });
+            const userFriend = await User.findById(id).select({ name: 1, profileImage: 1, friends });
+
             return {
-                name: temp.name
+                name: userFriend.name,
+                avatar: userFriend.profileImage,
+                mutualFriends: calculateMutualFriends(user.friends, userFriend.friends)
             }
         }))
         // console.log("fridnss", user)
@@ -181,7 +208,7 @@ exports.updateProfileText = async function (email, location, name) {
 }
 
 exports.updateProfileImage = async function (email, imageType, file) {
-    console.log("hello")
+
     try {
         const user = await User.findOne({ email: email }).select({ coverImage: 1, profileImage: 1 });
 
@@ -199,7 +226,8 @@ exports.updateProfileImage = async function (email, imageType, file) {
             const cover = await cloudinary.uploader.upload(path.join('./uploads/' + file[0].filename),
                 { public_id: file[0].filename },
                 (error, result) => {
-                    console.log("Image upload error")
+                    if (error)
+                        console.log("Image upload error")
                 })
 
             user.coverImage = cover.url
@@ -210,10 +238,11 @@ exports.updateProfileImage = async function (email, imageType, file) {
             const profile = await cloudinary.uploader.upload(path.join('./uploads/' + file[0].filename),
                 { public_id: file[0].filename },
                 (error, result) => {
-                    console.log("Image upload error")
+                    if (error)
+                        console.log("Image upload error")
 
                 })
-            console.log("profile", profile)
+
             user.profileImage = profile.url;
         }
         await user.save();
