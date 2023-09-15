@@ -207,6 +207,36 @@ exports.updateProfileText = async function (email, location, name) {
     }
 }
 
+exports.updateDescription = async function (email, description) {
+    console.log("description", description)
+
+    try {
+        const user = await User.findOne({ email: email }).select({ description: 1 });
+        if (!user) return {
+            statusCode: 400, response: {
+                success: false, message: "User does not exist", notification: {
+                    value: true,
+                    message: "User does not exist updating profile"
+                }
+            }
+        };
+
+        user.description = description;
+        await user.save();
+        return {
+            statusCode: 200, response: {
+                success: true, message: "About me is updated", notification: {
+                    value: true,
+                    message: "About me is updated"
+                }
+            }
+        };
+    } catch (e) {
+        // Log Errors
+        console.log("error", e)
+    }
+}
+
 exports.updateProfileImage = async function (email, imageType, file) {
 
     try {

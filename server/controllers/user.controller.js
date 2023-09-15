@@ -66,4 +66,15 @@ exports.updateProfileImage = async function (req, res, next) {
     }
 }
 
+exports.updateDescription = async function (req, res, next) {
+    const { email, description } = req.body;
+    try {
+        const { statusCode, response } = await UserService.updateDescription(email, description);
+        res.status(statusCode).send(response);
+    }
+    catch (error) {
+        next(error);
+    }
+}
+
 

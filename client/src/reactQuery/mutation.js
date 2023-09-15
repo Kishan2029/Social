@@ -66,8 +66,20 @@ export const updateProfileImage = async (body) => {
 }
 
 export const addFriend = async (body) => {
-    console.log(config.urls.user.addFriend())
+
     const { data } = await axios.post(config.urls.user.addFriend(), body, {
+        headers: {
+            Authorization: "Bearer " + getAccessToken(),
+
+        },
+    });
+
+    return data.data;
+}
+
+export const updateDescription = async (body) => {
+
+    const { data } = await axios.post(config.urls.user.updateDescription(), body, {
         headers: {
             Authorization: "Bearer " + getAccessToken(),
 

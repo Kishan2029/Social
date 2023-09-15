@@ -162,6 +162,9 @@ export const config = {
       addFriend: () => {
         return `${import.meta.env.VITE_BACKEND_URL}/user/addFriend`;
       },
+      updateDescription: () => {
+        return `${import.meta.env.VITE_BACKEND_URL}/user/updateDescription`;
+      },
     },
     comment: {
       addComment: () => {

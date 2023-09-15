@@ -9,6 +9,7 @@ router.get('/:email', UserController.getUserInfo)
 router.get('/getFriends/:email', UserController.getFriends)
 router.get('/getPhotos/:email', UserController.getPhotos)
 router.post('/addFriend', UserController.addFriend)
+router.post('/updateDescription', UserController.updateDescription)
 router.post('/profile/updateText', UserController.updateProfileText)
 router.post('/profile/updateImage', imageUpload, UserController.updateProfileImage)
 
