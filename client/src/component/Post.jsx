@@ -147,6 +147,7 @@ const Post = ({
             time: "0 second ago",
             message: body.message,
             avatar: auth.avatar,
+            id: Math.floor(Math.random() * 90000) + 10000,
           },
           ...oldData,
         ];

@@ -13,7 +13,6 @@ const Comment = ({ postId }) => {
     queryKey: ["comments", postId],
   });
 
-  // console.log("commentData", data);
   if (isLoading) {
     return <CircularProgress />;
   }

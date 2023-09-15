@@ -65,7 +65,8 @@ exports.getNotifications = async function (email) {
                 name,
                 message,
                 time: postCreationTime(item.createdAt),
-                avatar: notificationUser.profileImage
+                avatar: notificationUser.profileImage,
+                id: item.id
             })
         }))
 

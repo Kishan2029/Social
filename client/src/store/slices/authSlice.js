@@ -8,6 +8,7 @@ export const authSlice = createSlice({
     reducers: {
         setUser: (state, action) => {
             // console.log("action", action);
+            console.log("set User called")
             state.user = action.payload
         },
         // decrement: (state) => {

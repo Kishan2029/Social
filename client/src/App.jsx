@@ -24,6 +24,9 @@ import {
   axiosRequestInterceptor,
   axiosResponseInterceptor,
 } from "./config/http";
+import { config } from "./config";
+import { getAccessToken } from "./util/helper";
+import axios from "axios";
 
 axiosRequestInterceptor();
 axiosResponseInterceptor();
@@ -36,13 +39,13 @@ function App() {
 
   const location = useLocation();
 
-  // useEffect(() => {
-  //   console.log("loader", loader);
-  // }, [loader]);
+  useEffect(() => {
+    console.log("auth", auth);
+  }, [auth]);
 
   const functionToChangeState = () => {
     // dispatch(setLoader(true));
-    onAuthStateChanged(firebaseAuth, (user) => {
+    onAuthStateChanged(firebaseAuth, async (user) => {
       if (user) {
         const body = {
           name: user.displayName,
@@ -52,8 +55,26 @@ function App() {
         // // store access token in local storage
         localStorage.setItem("accessToken", user.accessToken);
 
-        // loginRequest(body);
-        dispatch(setUser(body));
+        // call userInfo
+        const { data } = await axios.get(
+          config.urls.user.getUserInfo(user.email),
+          {
+            headers: {
+              Authorization: "Bearer " + getAccessToken(),
+            },
+          }
+        );
+        console.log("data", data.data);
+        const globalUser = {
+          email: user.email,
+          name: data.data.name !== undefined ? data.data.name : user.name,
+          avatar:
+            data.data.profileImage !== undefined
+              ? data.data.profileImage
+              : null,
+        };
+        console.log("globalUser", globalUser);
+        dispatch(setUser(globalUser));
       } else {
       }
     });

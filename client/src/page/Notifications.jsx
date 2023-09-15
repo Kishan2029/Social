@@ -25,7 +25,6 @@ const Notifications = () => {
   if (isLoading) {
     return <CircularProgress />;
   }
-  console.log("data", data);
 
   return (
     <Box>
@@ -53,7 +52,7 @@ const Notifications = () => {
         ) : (
           data.map((item) => {
             return (
-              <>
+              <div key={item.id}>
                 <Box
                   sx={{
                     display: "flex",
@@ -67,7 +66,7 @@ const Notifications = () => {
                   </Typography>
                 </Box>
                 <Divider sx={{ mb: "1rem", mt: "1rem" }} />
-              </>
+              </div>
             );
           })
         )}
