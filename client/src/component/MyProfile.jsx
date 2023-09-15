@@ -38,7 +38,6 @@ const MyProfile = ({
   userProfileImage,
 }) => {
   const auth = useSelector((state) => state.auth.user);
-  const queryClient = useQueryClient();
 
   // conditoinal variables
   const [editProfile, setEditProfile] = useState(false);
@@ -78,7 +77,6 @@ const MyProfile = ({
   };
 
   const saveCoverImage = () => {
-    console.log("clicked");
     let formData = new FormData();
 
     formData.append("images", coverImage);

@@ -68,10 +68,8 @@ const Post = ({
     mutationFn: (body) => likePost(body),
     onSuccess: async (queryKey, body) => {
       console.log("success like");
-      console.log("owner", owner);
-      console.log("like", body.like);
+
       if (!owner) {
-        console.log("hello");
         notificationMutation.mutate({
           type: "like",
           postId: body.postId,
@@ -188,7 +186,7 @@ const Post = ({
     onMutate: async (body) => {},
     onSuccess: async (queryKey, body) => {
       // set data
-      console.log("friend added");
+      console.log("friend success");
       if (!owner) {
         notificationMutation.mutate({
           type: "follow",
@@ -247,7 +245,7 @@ const Post = ({
       add: changeState,
       postId,
     });
-    console.log(auth.email, createdBy, changeState);
+
     setFriendStatus(changeState);
   };
 
@@ -419,10 +417,10 @@ const Post = ({
             />
             <Typography>{commentCount}</Typography>
           </Box>
-          <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+          {/* <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
             <ShareIcon />
             <Typography>10</Typography>
-          </Box>
+          </Box> */}
         </Box>
         {/* Comment text */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 2, mt: "2rem" }}>
@@ -443,26 +441,30 @@ const Post = ({
               if (ev.key === "Enter") {
                 console.log("Enter Pressed");
                 ev.preventDefault();
+
                 // console.log("comment", commentMessage);
                 if (commentMessage !== "") {
+                  setOpenComment(true);
+                  setCommentMessage("");
                   commentMutation.mutate({
                     email: auth.email,
                     postId,
                     message: commentMessage,
                   });
-                  setCommentMessage("");
-                  setOpenComment(true);
                 }
               }
             }}
           />
         </Box>
         {/* Comment List */}
-        {openComment && (
+        {/* {openComment && (
           <Box sx={{ mt: "2rem" }}>
             <Comment postId={postId} />
           </Box>
-        )}
+        )} */}
+        <Box sx={{ mt: "2rem", display: openComment ? "block" : "none" }}>
+          <Comment postId={postId} />
+        </Box>
         {/* {openComment ? (
           <Box sx={{ mt: "2rem" }}>
             <Comment postId={postId} />
