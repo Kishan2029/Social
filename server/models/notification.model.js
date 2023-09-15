@@ -3,8 +3,7 @@ const mongoose = require("mongoose");
 const NotificationSchema = new mongoose.Schema({
     type: {
         type: String,
-        enum: ['like', 'comment'],
-        default: 'like',
+        enum: ['like', 'comment', 'follow'],
         required: true,
     },
     actionPerformedUser: {
@@ -15,7 +14,7 @@ const NotificationSchema = new mongoose.Schema({
     postId: {
         type: mongoose.Schema.ObjectId,
         ref: 'post',
-        required: true
+        required: false
     },
     postOwnerUser: {
         type: mongoose.Schema.ObjectId,

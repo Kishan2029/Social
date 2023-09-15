@@ -38,8 +38,6 @@ const CreatePost = () => {
     });
   };
 
-  console.log("auth", auth.name);
-
   const mutation = useMutation({
     mutationFn: (body) => createPostRequest(body),
     onSuccess: async (data) => {
@@ -47,7 +45,6 @@ const CreatePost = () => {
       queryClient.invalidateQueries(["userPost"]);
       queryClient.invalidateQueries(["savedPosts"]);
 
-      console.log("data", data);
       // queryClient.setQueriesData(["posts"], (oldData) => {
       //   const newData = [
       //     {

@@ -14,8 +14,7 @@ cloudinary.config({
 const calculateMutualFriends = (array1, array2) => {
     array1 = array1.map((item) => String(item))
     array2 = array2.map((item) => String(item))
-    console.log("array1", array1)
-    console.log("array2", array2)
+
     const set1 = new Set(array1);
     const set2 = new Set(array2);
 
@@ -155,7 +154,7 @@ exports.getFriends = async function (email) {
 }
 
 exports.getPhotos = async function (email) {
-    console.log(email)
+
     try {
         const user = await User.findOne({ email: email });
         // console.log("user", user);
@@ -208,7 +207,7 @@ exports.updateProfileText = async function (email, location, name) {
 }
 
 exports.updateDescription = async function (email, description) {
-    console.log("description", description)
+
 
     try {
         const user = await User.findOne({ email: email }).select({ description: 1 });

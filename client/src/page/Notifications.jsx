@@ -14,6 +14,7 @@ import {
 import { useQuery } from "react-query";
 import { fetchNotifications } from "../reactQuery/query";
 import { useSelector } from "react-redux";
+import UserAvatar from "../component/UserAvatar";
 
 const Notifications = () => {
   const auth = useSelector((state) => state.auth.user);
@@ -37,9 +38,16 @@ const Notifications = () => {
       <Card sx={{ padding: "1rem" }}>
         {/* List of friends */}
         {data.length === 0 ? (
-          <Box sx={{ height: "4rem", display: "flex", alignItems: "center" }}>
-            <Typography sx={{ textAlign: "left" }}>
-              You have no notification
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              mt: "2rem",
+              mb: "1.8rem",
+            }}
+          >
+            <Typography sx={{ fontSize: "1.5rem" }}>
+              You have no Notifications
             </Typography>
           </Box>
         ) : (
@@ -53,12 +61,9 @@ const Notifications = () => {
                     gap: 2,
                   }}
                 >
-                  <Avatar sx={{ height: 45, width: 45 }} />
+                  <UserAvatar name={item.name} avatar={item.avatar} />
                   <Typography>
-                    <b>{item.name} </b>{" "}
-                    {item.type === like
-                      ? "liked your Post"
-                      : "commented on Your post"}
+                    <b>{item.name} </b> {item.message}
                   </Typography>
                 </Box>
                 <Divider sx={{ mb: "1rem", mt: "1rem" }} />

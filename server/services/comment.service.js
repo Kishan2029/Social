@@ -19,7 +19,7 @@ exports.addComment = async function (email, postId, message) {
             createdBy: user,
             post
         }
-        console.log("comment")
+
         const newComment = new Comment(comment)
         await newComment.save()
 
@@ -44,7 +44,7 @@ exports.addComment = async function (email, postId, message) {
 }
 
 exports.getComments = async function (postId) {
-    console.log("postId", postId)
+
     try {
         let comment = await Comment.find({ post: postId }).sort({ createdAt: -1 })
 

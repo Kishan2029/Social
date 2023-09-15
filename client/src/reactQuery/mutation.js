@@ -38,7 +38,7 @@ export const likePost = async (body) => {
             Authorization: "Bearer " + getAccessToken(),
         },
     });
-    console.log("like", data);
+
     return data.data;
 }
 

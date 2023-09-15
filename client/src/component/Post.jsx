@@ -59,17 +59,24 @@ const Post = ({
   // mutations
   const notificationMutation = useMutation({
     mutationFn: (body) => addNotification(body),
+    onSuccess: () => {
+      console.log("notification mutation success");
+    },
   });
 
   const likeMutation = useMutation({
     mutationFn: (body) => likePost(body),
     onSuccess: async (queryKey, body) => {
       console.log("success like");
-      if (!owner && body.changeState) {
+      console.log("owner", owner);
+      console.log("like", body.like);
+      if (!owner) {
+        console.log("hello");
         notificationMutation.mutate({
           type: "like",
           postId: body.postId,
           email: auth.email,
+          value: body.like,
         });
       }
 
@@ -134,7 +141,6 @@ const Post = ({
   const commentMutation = useMutation({
     mutationFn: (body) => addComment(body),
     onMutate: async (body) => {
-      console.log("onMutate");
       setCommentCount((old) => Number(old) + 1);
       queryClient.setQueriesData(["comments", postId], (oldData) => {
         const newData = [
@@ -156,9 +162,10 @@ const Post = ({
       queryClient.invalidateQueries(["comments", postId]);
       if (!owner) {
         notificationMutation.mutate({
-          type: "like",
+          type: "comment",
           postId: body.postId,
           email: auth.email,
+          value: true,
         });
       }
       // queryClient.setQueriesData(["comments", postId], (oldData) => {
@@ -182,6 +189,14 @@ const Post = ({
     onSuccess: async (queryKey, body) => {
       // set data
       console.log("friend added");
+      if (!owner) {
+        notificationMutation.mutate({
+          type: "follow",
+          postId: body.postId,
+          email: auth.email,
+          value: body.add,
+        });
+      }
 
       queryClient.setQueriesData(["posts"], (oldData) => {
         const newData = oldData.map((item) => {
@@ -230,6 +245,7 @@ const Post = ({
       email: auth.email,
       friendId: createdBy,
       add: changeState,
+      postId,
     });
     console.log(auth.email, createdBy, changeState);
     setFriendStatus(changeState);

@@ -32,7 +32,7 @@ const imageUpload = (req, res, next) => {
 
         // Retrieve uploaded files
         const files = req.files;
-        console.log("files", files)
+
         const errors = [];
 
         // Attach files to the request object

@@ -79,7 +79,7 @@ exports.addSavedPost = async function (req, res, next) {
 }
 
 exports.hidePost = async function (req, res, next) {
-    console.log("hello")
+
     const { email, postId, hide } = req.body;
 
     try {

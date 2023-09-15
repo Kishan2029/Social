@@ -4,35 +4,45 @@ const Notification = require('../models/notification.model');
 const { getUserName } = require('./comment.service');
 const { postCreationTime } = require('./post.service');
 
-exports.addNotification = async function (type, postId, email) {
+exports.addNotification = async function (type, postId, email, value) {
     console.log("type", type);
     console.log("postId", postId);
     console.log("email", email);
 
     try {
-
-
         const user = await User.findOne({ email: email }).select({ _id: 1 });
 
-        const post = await Post.findById(postId);
+        if (value) {
+            const post = await Post.findById(postId);
+            const notification = {
+                type,
+                postId,
+                actionPerformedUser: user,
+                postOwnerUser: post.createdBy
+            }
 
-        const notification = {
-            type,
-            postId,
-            actionPerformedUser: user,
-            postOwnerUser: post.createdBy
+            const newNotification = new Notification(notification)
+            await newNotification.save()
+
+            return {
+                statusCode: 200, response: {
+                    success: true, message: "Notification added", notification: {
+                        value: false
+                    }
+                }
+            };
+        } else {
+            await Notification.deleteOne({ type, postId, actionPerformedUser: user })
+
+            return {
+                statusCode: 200, response: {
+                    success: true, message: "Notification deleted", notification: {
+                        value: false
+                    }
+                }
+            };
         }
 
-        const newNotification = new Notification(notification)
-        await newNotification.save()
-
-        return {
-            statusCode: 200, response: {
-                success: true, message: "Notification added", notification: {
-                    value: false
-                }
-            }
-        };
     } catch (e) {
         // Log Errors
         console.log("error", e)
@@ -40,19 +50,22 @@ exports.addNotification = async function (type, postId, email) {
 }
 
 exports.getNotifications = async function (email) {
-    console.log("email", email)
+
     try {
         const user = await User.findOne({ email: email }).select({ _id: 1 });
-        console.log("user")
+
         let notifications = await Notification.find({ postOwnerUser: user._id }).sort({ createdAt: -1 })
-        console.log("notification")
+
         notifications = await Promise.all(notifications.map(async (item) => {
-            const name = await getUserName(item.actionPerformedUser);
+            const notificationUser = await User.findById(item.actionPerformedUser).select({ name: 1, profileImage: 1 });
+            const name = notificationUser.name;
+            const message = item.type === "like" ? `liked your Post` : (item.type === "comment" ? `commented on your Post` : `started following you`)
             return ({
                 type: item.type,
                 name,
-                message: item.type === "like" ? `${name} liked your Post` : `${name} commented on your Post`,
-                time: postCreationTime(item.createdAt)
+                message,
+                time: postCreationTime(item.createdAt),
+                avatar: notificationUser.profileImage
             })
         }))
 

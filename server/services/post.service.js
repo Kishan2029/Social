@@ -60,17 +60,17 @@ exports.createPost = async function (body, file) {
     try {
         const user = await User.findOne({ email: email }).select({ _id: 1 });
         const images = await Promise.all(file.map(async (item) => {
-            console.log("item", item)
+
             const postImage = await cloudinary.uploader.upload(path.join('./uploads/' + item.filename),
                 { public_id: item.filename },
                 (error, result) => {
-                    console.log("result", result)
+
                     if (error)
                         console.log("Image upload error")
                 })
             return postImage.url;
         }))
-        console.log("images", images)
+
         const post = {
             content,
             createdBy: user,
@@ -218,9 +218,9 @@ exports.getAllPosts = async function (email) {
 
     try {
         const user = await User.findOne({ email: email }).select({ _id: 1, name: 1, savedPosts: 1, friends: 1 });
-        console.log("user", user)
+
         var posts = await Post.find().sort({ createdAt: -1 });
-        console.log("posts")
+
         posts = await Promise.all(posts.map(async (item) => {
             const userAvatar = await User.findById(item.createdBy).select({ _id: 1, name: 1, profileImage: 1, });
             return {
@@ -267,9 +267,9 @@ exports.likePost = async function (email, postId, like) {
         }
     };
 
-    console.log("likes", post.likes)
+
     const len = post.likes.indexOf(user._id);
-    console.log("len", len)
+
     if (like) {
         if (len < 0) {
             post.likes.unshift(user._id);
