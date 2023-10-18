@@ -15,8 +15,7 @@ dist-ssr
 .env
 .env.dev
 credentials
-server/uploads
-etc
+
 
 # Editor directories and files
 .vscode/*
