@@ -3,6 +3,7 @@ const Post = require('../models/post.model')
 const fs = require('fs')
 const path = require('path');
 const { error } = require('console');
+const { removeFile } = require('./post.service');
 
 const cloudinary = require('cloudinary').v2;
 cloudinary.config({
@@ -255,6 +256,7 @@ exports.updateProfileImage = async function (email, imageType, file) {
             const cover = await cloudinary.uploader.upload(path.join('./uploads/' + file[0].filename),
                 { public_id: file[0].filename },
                 (error, result) => {
+                    removeFile(file[0].filename)
                     if (error)
                         console.log("Image upload error")
                 })
@@ -267,6 +269,7 @@ exports.updateProfileImage = async function (email, imageType, file) {
             const profile = await cloudinary.uploader.upload(path.join('./uploads/' + file[0].filename),
                 { public_id: file[0].filename },
                 (error, result) => {
+                    removeFile(file[0].filename)
                     if (error)
                         console.log("Image upload error")
 

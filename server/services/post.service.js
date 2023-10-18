@@ -42,6 +42,18 @@ const postCreationTime = exports.postCreationTime = (date) => {
     else
         return formatTimeUnit(secondsDifference, 'second');
 }
+
+const removeFile = exports.removeFile = (filename) => {
+    // Use fs.unlinkSync to delete the file synchronously
+    const filePath = path.join('./uploads/' + filename)
+    try {
+        fs.unlinkSync(filePath);
+        console.log('File successfully deleted!');
+    } catch (err) {
+        console.error('Error deleting the file:', err);
+    }
+}
+
 const isUserOwner = (userId, postId) => {
     return String(userId) === String(postId);
 }
@@ -55,6 +67,7 @@ const hasUserLiked = (array, item) => {
 }
 
 exports.createPost = async function (body, file) {
+    console.log("inside createPosrt")
     const { email, content } = body;
 
     try {
@@ -62,9 +75,10 @@ exports.createPost = async function (body, file) {
         const images = await Promise.all(file.map(async (item) => {
 
             const postImage = await cloudinary.uploader.upload(path.join('./uploads/' + item.filename),
-                { public_id: item.filename },
+                { public_id: process.env.NODE_ENV === "production" ? "socialMedia_Prod/" + item.filename : item.filename },
                 (error, result) => {
-
+                    console.log("Hello")
+                    removeFile(item.filename)
                     if (error)
                         console.log("Image upload error")
                 })
@@ -79,6 +93,9 @@ exports.createPost = async function (body, file) {
 
         const newPost = new Post(post)
         const res = await newPost.save();
+
+
+
         return {
             statusCode: 200, response: {
                 success: true, message: "New post is created",
