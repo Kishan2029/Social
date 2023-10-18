@@ -15,7 +15,6 @@ dist-ssr
 .env
 .env.dev
 credentials
-firebaseConfig.js
 server/uploads
 etc
 
