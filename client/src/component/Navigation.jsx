@@ -10,9 +10,11 @@ import { auth } from "../firebaseConfig";
 // import { auth } from "../firebaseConfig";
 
 const Navigation = () => {
-  const [selected, setSelected] = useState("home"); // home,friends, savedPosts, notification,login
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation();
+
+  const [selected, setSelected] = useState(location.pathname.split("/")[1]); // home,friends, savedPosts, notification,login
 
   const logout = () => {
     signOut(auth)

@@ -77,11 +77,11 @@ export const config = {
       title: "Delete",
       icon: <DeleteOutlineIcon />,
     },
-    {
-      name: "report",
-      title: "Report",
-      icon: <WarningAmberIcon />,
-    },
+    // {
+    //   name: "report",
+    //   title: "Report",
+    //   icon: <WarningAmberIcon />,
+    // },
   ],
   loginItems: [
     {

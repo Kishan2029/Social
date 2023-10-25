@@ -1,9 +1,11 @@
 import {
   createBrowserRouter,
+  redirect,
   Route,
   RouterProvider,
   Routes,
   useLocation,
+  useNavigate,
 } from "react-router-dom";
 import "./App.css";
 import Navigation from "./component/Navigation";
@@ -38,6 +40,7 @@ function App() {
   const dispatch = useDispatch();
 
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     console.log("auth", auth);
@@ -47,12 +50,7 @@ function App() {
     // dispatch(setLoader(true));
     onAuthStateChanged(firebaseAuth, async (user) => {
       if (user) {
-        const body = {
-          name: user.displayName,
-          email: user.email,
-        };
-
-        // // store access token in local storage
+        // store access token in local storage
         localStorage.setItem("accessToken", user.accessToken);
 
         // call userInfo
@@ -64,7 +62,7 @@ function App() {
             },
           }
         );
-        console.log("data", data.data);
+        // console.log("data", data.data);
         const globalUser = {
           email: user.email,
           name: data.data.name !== undefined ? data.data.name : user.name,
@@ -73,7 +71,7 @@ function App() {
               ? data.data.profileImage
               : null,
         };
-        console.log("globalUser", globalUser);
+        // console.log("globalUser", globalUser);
         dispatch(setUser(globalUser));
       } else {
       }
@@ -81,6 +79,7 @@ function App() {
   };
   useEffect(() => {
     functionToChangeState();
+    console.log("page refresh");
   }, []);
   return (
     <>
@@ -101,7 +100,10 @@ function App() {
                 <Route key={path} index={true} path={path} element={<Home />} />
               ))}
               <Route path="/profile" element={<Profile />} />
-              <Route path="/savedPosts" element={<SavedPosts />} />
+              <Route
+                path="/savedPosts"
+                element={auth ? <SavedPosts /> : navigate("/login")}
+              />
               <Route path="/notifications" element={<Notifications />} />
               {/* <Route path="/logout" element={} /> */}
             </Routes>
