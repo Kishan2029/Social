@@ -132,7 +132,7 @@ const CreatePost = () => {
         /> */}
         <TextField
           value={content}
-          placeholder="What's on your mind,Kishan ?"
+          placeholder={`What's on your mind, ${auth.name} ?`}
           multiline
           variant="outlined"
           fullWidth
