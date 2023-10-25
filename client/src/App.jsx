@@ -1,5 +1,6 @@
 import {
   createBrowserRouter,
+  Navigate,
   redirect,
   Route,
   RouterProvider,
@@ -95,10 +96,12 @@ function App() {
           {/* Routing */}
           <Box sx={{ width: "75%" }}>
             <Routes>
-              {/* <Route path="/" element={navi} /> */}
-              {["/home", "/"].map((path) => (
+              <Route path="/" element={<Navigate to="/home" />} />
+              {/* {["/home", "/"].map((path) => (
                 <Route key={path} index={true} path={path} element={<Home />} />
-              ))}
+              ))} */}
+              <Route path="/home" index={true} element={<Home />} />
+
               <Route path="/profile" element={<Profile />} />
               <Route
                 path="/savedPosts"

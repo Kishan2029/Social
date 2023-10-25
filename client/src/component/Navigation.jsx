@@ -13,14 +13,17 @@ const Navigation = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
-
-  const [selected, setSelected] = useState(location.pathname.split("/")[1]); // home,friends, savedPosts, notification,login
+  console.log("location", location.pathname);
+  const [selected, setSelected] = useState(
+    location.pathname.split("/")[1] || "home"
+  ); // home,friends, savedPosts, notification,login
 
   const logout = () => {
     signOut(auth)
       .then(() => {
         removeAccessToken();
         dispatch(setUser(null));
+        navigate("");
       })
       .catch((error) => {
         console.log("Sign out firebase error", error);
