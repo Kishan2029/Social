@@ -6,6 +6,7 @@ import {
   Grid,
   ImageList,
   ImageListItem,
+  InputAdornment,
   TextField,
   Typography,
 } from "@mui/material";
@@ -28,6 +29,7 @@ import { useSelector } from "react-redux";
 import Comment from "./Comment";
 import UserAvatar from "./UserAvatar";
 import { fetchComments } from "../reactQuery/query";
+import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 
 const Post = ({
   content,
@@ -250,6 +252,18 @@ const Post = ({
     setFriendStatus(changeState);
   };
 
+  const clickCommentEnter = () => {
+    if (commentMessage !== "") {
+      setOpenComment(true);
+      setCommentMessage("");
+      commentMutation.mutate({
+        email: auth.email,
+        postId,
+        message: commentMessage,
+      });
+    }
+  };
+
   // whenever friend changes update friendStatus
   useEffect(() => {
     setFriendStatus(friend);
@@ -435,6 +449,14 @@ const Post = ({
               style: {
                 borderRadius: "2rem",
               },
+              endAdornment: (
+                <InputAdornment position="start">
+                  <ArrowRightIcon
+                    sx={{ fontSize: "3rem", cursor: "pointer" }}
+                    onClick={() => clickCommentEnter()}
+                  />
+                </InputAdornment>
+              ),
             }}
             value={commentMessage}
             onChange={(e) => setCommentMessage(e.target.value)}
