@@ -46,7 +46,7 @@ const FriendsTab = () => {
           }}
         >
           <Typography sx={{ fontSize: "1.5rem" }}>
-            You have no Friends
+            You do not follow anyone
           </Typography>
         </Box>
       ) : (
@@ -69,7 +69,7 @@ const FriendsTab = () => {
                       mb: 0,
                     }}
                     secondaryTypographyProps={{ mt: 0 }}
-                    secondary={`${item.mutualFriends} Mutual Friends`}
+                    secondary={`${item.mutualFriends} Mutual Follower`}
                   />
                 </ListItem>
                 <Divider light sx={{ mb: "0.5rem", mt: "0.5rem" }} />

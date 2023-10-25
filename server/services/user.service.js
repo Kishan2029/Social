@@ -13,6 +13,9 @@ cloudinary.config({
 });
 
 const calculateMutualFriends = (array1, array2) => {
+    console.log("array1", array1);
+    console.log("array2", array2);
+
     array1 = array1.map((item) => String(item))
     array2 = array2.map((item) => String(item))
 
@@ -128,11 +131,12 @@ exports.addFriend = async function (email, freindId, add) {
 exports.getFriends = async function (email) {
 
     try {
-        const user = await User.findOne({ email: email }).select({ friends: 1 });
+        const user = await User.findOne({ email: email }).select({ friends: 1, name: 1, });
         let friends = user.friends;
         friends = await Promise.all(friends.map(async (id) => {
-            const userFriend = await User.findById(id).select({ name: 1, profileImage: 1, friends });
-
+            const userFriend = await User.findById(id).select({ name: 1, profileImage: 1, friends: 1 });
+            console.log("userA ", user.name, "userB", userFriend.name)
+            console.log("userB Friends")
             return {
                 name: userFriend.name,
                 avatar: userFriend.profileImage,

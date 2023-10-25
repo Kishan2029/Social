@@ -473,7 +473,7 @@ const MyProfile = ({
             <Tab
               icon={<PeopleIcon />}
               iconPosition="start"
-              label="Friends"
+              label="Following"
               value="3"
             />
             <Tab
