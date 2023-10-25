@@ -22,6 +22,7 @@ import { getAccessToken, stringToColor } from "../util/helper";
 import { QueryClient, useMutation, useQueryClient } from "react-query";
 import Loading from "./Loading";
 import UserAvatar from "./UserAvatar";
+import { notify } from "../util/notify";
 
 const CreatePost = () => {
   const [content, setContent] = useState("");
@@ -69,6 +70,10 @@ const CreatePost = () => {
 
   //onClick
   const onShare = () => {
+    if (image === null && content === "") {
+      notify("error", "Write something or attach a photo");
+      return;
+    }
     var formData = new FormData();
 
     image?.map((item) => {
