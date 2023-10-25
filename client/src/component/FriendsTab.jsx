@@ -52,7 +52,7 @@ const FriendsTab = () => {
       ) : (
         <>
           <Typography sx={{ fontSize: "2rem", fontWeight: 500 }}>
-            Friends
+            Followers
           </Typography>
           {data.map((item, index) => {
             return (
