@@ -107,8 +107,11 @@ const MyProfile = ({
     }
   }, [profileImage]);
   return (
+    // <Card
+    //   sx={{ height: editProfile ? "48.3vh" : "40vh", position: "relative" }}
+    // >
     <Card
-      sx={{ height: editProfile ? "48.3vh" : "40vh", position: "relative" }}
+      sx={{ height: editProfile ? "24.7rem" : "20.3rem", position: "relative" }}
     >
       {/* Cover Image */}
       <Box sx={{ height: "50%", position: "relative" }}>
