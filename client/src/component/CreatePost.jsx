@@ -1,5 +1,4 @@
 import {
-  Avatar,
   Box,
   Button,
   Card,
@@ -235,7 +234,7 @@ const CreatePost = () => {
               }}
             />
           </Box>
-          <Box sx={{ display: "flex", alignItems: "center", gap: 0.4 }}>
+          {/* <Box sx={{ display: "flex", alignItems: "center", gap: 0.4 }}>
             <PersonOutlineIcon sx={{ fontSize: "1.7rem" }} />
             People
           </Box>
@@ -246,7 +245,7 @@ const CreatePost = () => {
           <Box sx={{ display: "flex", alignItems: "center", gap: 0.4 }}>
             <SentimentSatisfiedAltIcon sx={{ fontSize: "1.7rem" }} />
             Mood
-          </Box>
+          </Box> */}
         </Box>
         <Button
           variant="contained"
