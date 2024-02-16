@@ -1,5 +1,5 @@
 <div align="center" id="top"> 
-  <img src="https://github.com/Kishan2029/ChatVista/blob/master/client/public/logo192.png" alt="Social Media" />
+  <img src="https://github.com/Kishan2029/ChatVista/blob/master/client/public/logo192.png" alt="Social Media" width="80" height="80" />
 
 &#xa0;
 
@@ -64,8 +64,6 @@ The following tools were used in this project:
 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg" alt="javascript" width="40" height="40"/> </a>
 <a href="https://reactjs.org/" target="_blank"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/react/react-original-wordmark.svg" alt="react" width="40" height="40"/> </a>
 <a href="https://reactjs.org/" target="_blank"> <img src="https://camo.githubusercontent.com/f1711f466b9bbd685dafb7e109ee186ff126bb8b100eee77c600cdef7f522640/68747470733a2f2f6d75692e636f6d2f7374617469632f6c6f676f2e737667" alt="mui" width="40" height="40"/> </a>
-
-
 <a href="https://redux.js.org" target="_blank"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/redux/redux-original.svg" alt="redux" width="40" height="40"/> </a> </p>
 
 ## :checkered_flag: Starting
