@@ -1,5 +1,5 @@
 <div align="center" id="top"> 
-  <img src="https://github.com/Kishan2029/ChatVista/blob/master/client/public/logo192.png" alt="Social Media" width="80" height="80" />
+  <img src="https://github.com/Kishan2029/Social_Media/blob/master/client/public/vite.svg" alt="Social Media" width="80" height="80" />
 
 &#xa0;
 
