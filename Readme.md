@@ -58,13 +58,14 @@ This social media platform is a full-stack MERN application. Users can create an
 
 The following tools were used in this project:
 <p align="left"> 
-
-<a href="https://firebase.google.com/" target="_blank"> <img src="https://www.vectorlogo.zone/logos/firebase/firebase-icon.svg" alt="firebase" width="40" height="40"/> </a> 
-<a href="https://git-scm.com/" target="_blank"> <img src="https://www.vectorlogo.zone/logos/git-scm/git-scm-icon.svg" alt="git" width="40" height="40"/> </a>
-<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg" alt="javascript" width="40" height="40"/> </a>
-<a href="https://reactjs.org/" target="_blank"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/react/react-original-wordmark.svg" alt="react" width="40" height="40"/> </a>
-<a href="https://reactjs.org/" target="_blank"> <img src="https://camo.githubusercontent.com/f1711f466b9bbd685dafb7e109ee186ff126bb8b100eee77c600cdef7f522640/68747470733a2f2f6d75692e636f6d2f7374617469632f6c6f676f2e737667" alt="mui" width="40" height="40"/> </a>
-<a href="https://redux.js.org" target="_blank"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/redux/redux-original.svg" alt="redux" width="40" height="40"/> </a> </p>
+<a href="https://vitejs.dev/guide/" target="_blank"> <img src="https://github.com/marwin1991/profile-technology-icons/assets/62091613/b40892ef-efb8-4b0e-a6b5-d1cfc2f3fc35" alt="vite" width="40" height="40"/> </a>
+<a href="https://www.mongodb.com/" target="_blank"> <img src="https://user-images.githubusercontent.com/25181517/182884177-d48a8579-2cd0-447a-b9a6-ffc7cb02560e.png" alt="mongoDB" width="40" height="40"/> </a>
+<a href="https://redux.js.org" target="_blank"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/redux/redux-original.svg" alt="redux" width="40" height="40"/> </a>
+<a href="https://expressjs.com/" target="_blank"> <img src="https://user-images.githubusercontent.com/25181517/183859966-a3462d8d-1bc7-4880-b353-e2cbed900ed6.png" alt="express" width="40" height="40"/> </a>
+<a href="https://tanstack.com/query/v3/" target="_blank"> <img src="https://seeklogo.com/images/R/react-query-logo-1340EA4CE9-seeklogo.com.png" alt="react-query" width="40" height="40"/> </a>
+<a href="https://nodejs.org/en" target="_blank"> <img src="https://user-images.githubusercontent.com/25181517/183568594-85e280a7-0d7e-4d1a-9028-c8c2209e073c.png" alt="node" width="40" height="40"/> </a>
+<a href="https://mui.com/material-ui/" target="_blank"> <img src="https://camo.githubusercontent.com/f1711f466b9bbd685dafb7e109ee186ff126bb8b100eee77c600cdef7f522640/68747470733a2f2f6d75692e636f6d2f7374617469632f6c6f676f2e737667" alt="mui" width="40" height="40"/> </a> 
+ </p>
 
 ## Deploy Link
 https://social-media01.netlify.app/
