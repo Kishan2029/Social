@@ -11,6 +11,7 @@ const { errorHandler, logger, checkAuth } = require('./middleware/index');
 const connectDB = require('./config/db');
 
 
+// temp comment
 // Cors Setup
 const corsOptions = {
     origin: process.env.FRONTEND_URL,
